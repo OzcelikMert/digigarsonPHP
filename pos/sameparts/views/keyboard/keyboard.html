@@ -1,0 +1,101 @@
+<div Class='keyboard keyboard-text'>
+	<div style="width: 76%;display:inline-block;" data="keyboard">
+        <div class="caps" style="width: 55px;height: 168px;display: block;float: left;">
+            <button style="height: 160px" onclick="typingText('Aa')">Aa</button>
+        </div>
+		<div data="keyboard">
+			<button onclick="typingText('q')">q</button>
+			<button onclick="typingText('w')">w</button>
+			<button onclick="typingText('e')">e</button>
+			<button onclick="typingText('r')">r</button>
+			<button onclick="typingText('t')">t</button>
+			<button onclick="typingText('y')">y</button>
+			<button onclick="typingText('u')">u</button>
+			<button onclick="typingText('ı')">ı</button>
+			<button onclick="typingText('o')">o</button>
+			<button onclick="typingText('p')">p</button>
+			<button onclick="typingText('ğ')">ğ</button>
+			<button onclick="typingText('ü')">ü</button>
+			<button onclick="backSpace()" style="width:63px;">&#8592;</button>
+		</div>
+
+		<div data="keyboard">
+			<button onclick="typingText('a')">a</button>
+			<button onclick="typingText('s')">s</button>
+			<button onclick="typingText('d')">d</button>
+			<button onclick="typingText('f')">f</button>
+			<button onclick="typingText('g')">g</button>
+			<button onclick="typingText('h')">h</button>
+			<button onclick="typingText('j')">j</button>
+			<button onclick="typingText('k')">k</button>
+			<button onclick="typingText('l')">l</button>
+			<button onclick="typingText('ş')">ş</button>
+			<button onclick="typingText('i')">i</button>
+			<button onclick=Enter() style="width:125px;">&crarr; Enter</button>
+		</div>
+
+		<div data="keyboard">
+			<!--input type="submit" value='&darr;' Class='HOSKBTN' style='left:0px;top:112px;color:red;' onclick=hideTextKeyboard()-->
+			<button onclick="typingText('z')">z</button>
+			<button onclick="typingText('x')">x</button>
+			<button onclick="typingText('c')">c</button>
+			<button onclick="typingText('v')">v</button>
+			<button onclick="typingText('b')">b</button>
+			<button onclick="typingText('&nbsp;')" style="width:246px;">Boşluk</button>
+			<button onclick="typingText('n')">n</button>
+			<button onclick="typingText('m')">m</button>
+			<button onclick="typingText('ö')">ö</button>
+			<button style="width: 47px !important;" onclick="typingText('ç')">ç</button>
+		</div>
+	</div>
+	<div style="width: 17%;display:inline-block;" data="keyboard">
+		<!-- NUMPAD -->
+		<div data="keyboard">
+			<button onclick="typingText('7')">7</button>
+			<button onclick="typingText('8')">8</button>
+			<button onclick="typingText('9')">9</button>
+		</div>
+		<div data="keyboard">
+			<button onclick="typingText('4')">4</button>
+			<button onclick="typingText('5')">5</button>
+			<button onclick="typingText('6')">6</button>
+		</div>
+		<div data="keyboard">
+			<button onclick="typingText('1')">1</button>
+			<button onclick="typingText('2')">2</button>
+			<button onclick="typingText('3')">3</button>
+		</div>
+	</div>
+	<div style="width: 6%;display:inline-block;" data="keyboard">
+		<button onclick="typingText('0')" style="height: 107px;">0</button>
+		<button onclick="typingText('.')">.</button>
+	</div>
+</div>
+
+<div class='keyboard keyboard-number'>
+    <div data="keyboard">
+        <button onclick="typingNumber(7)">7</button>
+        <button onclick="typingNumber(8)">8</button>
+        <button onclick="typingNumber(9)">9</button>
+        <button onclick="typingNumber(0)">0</button>
+    </div>
+    <div data="keyboard">
+        <button onclick="typingNumber(4)">4</button>
+        <button onclick="typingNumber(5)">5</button>
+        <button onclick="typingNumber(6)">6</button>
+        <button onclick="typingNumber('.')" id="keyboard_number_button_dot">.</button>
+    </div>
+    <div data="keyboard">
+        <button onclick="typingNumber(1)">1</button>
+        <button onclick="typingNumber(2)">2</button>
+        <button onclick="typingNumber(3)">3</button>
+        <button onclick="typingNumber('-')">-</button>
+    </div>
+    <div id="keyboard-space" data="keyboard"  style="position: absolute;top: 0;right: 5px;">
+        <button onclick="backSpace()" style="height: 160px;">&#8592;</button>
+    </div>
+
+
+
+</div>
+

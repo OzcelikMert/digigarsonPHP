@@ -1,0 +1,146 @@
+body {
+    height: 100vh;
+    margin:0;
+    font-family: sans-serif;
+    overflow-x: hidden;
+}
+
+h1, h2{
+    text-transform: uppercase;
+    padding-bottom: 20px;
+}
+
+.input-group.md-form.form-sm.form-2 input {
+    border: 1px solid #bdbdbd;
+    border-radius: 11px;
+    padding: 8px !important;
+}
+
+.form-2 .input-group-addon {
+    border: 2px solid black;
+    border-radius: 50px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+}
+
+/***Preloader  Area*/
+.loader-box{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(68, 68, 68, 0.78);
+    z-index: 9999999;
+}
+.loader {
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    display: flex;
+    top: 50%;
+    left: 45%;
+}
+.loader span {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #dc3b3b;
+    border-radius: 50%;
+    margin: 0 5px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.loader span:nth-child(2) {
+    background: #f8f8f6;
+}
+.loader span:nth-child(3) {
+    background: #dc3b3b;
+}
+.loader span:nth-child(4) {
+    background: #f8f8f6;
+}
+.loader span:not(:last-child) {
+    animation: animate 1.5s linear infinite;
+}
+@keyframes animate {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(30px);
+    }
+}
+.loader span:last-child {
+    animation: jump 1.5s ease-in-out infinite;
+}
+
+@keyframes jump {
+    0% {
+        transform: translate(0, 0);
+    }
+    10% {
+        transform: translate(10px, -10px);
+    }
+    20% {
+        transform: translate(20px, 10px);
+    }
+    30% {
+        transform: translate(30px, -50px);
+    }
+    70% {
+        transform: translate(-150px, -50px);
+    }
+    80% {
+        transform: translate(-140px, 10px);
+    }
+    90% {
+        transform: translate(-130px, -10px);
+    }
+    100% {
+        transform: translate(-120px, 0);
+    }
+}
+/*** Preloader Area End
+table
+***/
+input:focus{
+    outline: none;
+    border: 2px white !important;
+}
+
+#section_url{
+    max-height: 300px;
+    overflow-y:auto;
+}
+#section_url li{
+    font-size: 13px;
+}
+/** Table End **/
+.margin_top_large{
+    margin-top:35px;
+}
+
+.form_choose_time {
+    text-align: -webkit-center;
+}
+
+/* for custom scrollbar for webkit browser*/
+::-webkit-scrollbar {
+    width: 15px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgb(255, 255, 255);
+}
+::-webkit-scrollbar-thumb {
+    background: #a83fd2;
+    box-shadow: inset 0 0 6px rgb(5, 17, 57);
+    transition: all .5s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: black;
+    box-shadow: inset 0 0 6px rgb(61, 59, 59);
+    border-radius: 19px;
+}

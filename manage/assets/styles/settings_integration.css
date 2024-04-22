@@ -1,0 +1,28 @@
+.products-table-div {
+    max-height: 750px;
+    overflow: auto;
+}
+
+.products-table-disabled {
+    pointer-events: none;
+    background: gray;
+    opacity: 0.8;
+}
+
+.product-integrate-selected {
+    background: #005a00 !important;
+}
+
+.product-selected-confirmed {
+    background: #7a5606 !important;
+    pointer-events: none;
+}
+
+.product-integrate-selected-confirmed {
+    background: #7a5606 !important;
+}
+
+.option-info {
+    font-weight: bold;
+    color: black;
+}

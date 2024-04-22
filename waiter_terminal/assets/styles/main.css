@@ -1,0 +1,10 @@
+body{
+    margin:0px;
+    padding:0px;
+    color:white !important;
+}
+.disabled-element {
+    pointer-events: none !important;
+    touch-action: none !important;
+    opacity: 0.4 !important;
+}

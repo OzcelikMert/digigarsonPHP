@@ -1,0 +1,22 @@
+body{
+    background: #c02425;
+    background: -webkit-linear-gradient(to right, #c02425, #f0cb35);
+    background: linear-gradient(to right, #c02425, #f0cb35);
+}
+.language-form .inputs {
+    color: white;
+}
+.language-table{
+    max-height: 840px;
+    overflow: auto;
+    display:inline-block;
+}
+.table-sticky thead, .table-sticky th {
+    position: sticky;
+    top: 0;
+}
+.btn-sync{
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+}

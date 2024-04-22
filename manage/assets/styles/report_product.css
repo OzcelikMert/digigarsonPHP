@@ -1,0 +1,9 @@
+.report-form button{
+    white-space: normal;
+    width: 100% !important;
+    height: 100% !important;
+}
+.report-result-div {
+    max-height: 850px;
+    overflow-x: scroll
+}

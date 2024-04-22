@@ -1,0 +1,68 @@
+
+/*LOGİN*/
+a:hover{
+    text-decoration: none;
+}
+.login-form {
+    width: 100%;
+    margin: auto;
+ }
+ .login-form-row{
+     width: 95%;
+ }
+ .input-icon .left-icon{
+    position: absolute;
+    margin-top: 9px;
+    margin-left: 12px;
+}
+.input-icon .right-icon{
+    position: absolute;
+    margin-top: -32.5px;
+    right: 35px;
+}
+
+.input-icon input[type="email"], .input-icon input[type="password"],.input-icon input[type="tel"],.input-icon input[type="e-mail"], .input-icon input[type="text"]{
+   padding-left: 40px;
+   padding-top: 10px;
+}
+
+.register-form-input{
+    border-bottom: 1px solid #a8a9ab;
+}
+.login-form-input{
+   /* border-radius: 20px;*/
+}
+
+
+/*LOGİN END*/
+/*enter code*/
+.code_group .form-code{
+    border: 0 ;
+    border-bottom: 1px solid #a1a7ac ;
+    border-radius: 0;
+    display: inline-block;
+    width: 30px;
+    font-size: 30px;
+    color: #5f6771;
+    padding: 0;
+    margin-right: 7px;
+    text-align: center;
+    line-height: 1;
+}
+.msform{
+ text-align: center;
+}
+.verification{
+    margin-top: auto;
+    padding: 12px;
+    border-radius: 17px;
+}
+.verification p{
+    text-align: center;
+    color: #757575;
+}
+.verification h2{
+    text-align: center;
+    font-size: 25px;
+}
+/*enter code END*/

@@ -1,0 +1,38 @@
+.settings{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr)
+}
+.settings .box {
+    height: 212px;
+    padding: 14px;
+}
+.settings .box .in {
+    background: var(--order-table-bg);
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.settings .box .in:hover {
+    transition: 0.5s;
+    background: #555;
+}
+
+.settings .box .icon i {
+    font-size: 55px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: white !important;
+}
+.settings .box .in .content p{
+    color: #ffaa55;
+    margin: 0;
+    font-size: 15px;
+}
+.settings .box .in .content{
+    height: 50px;
+    padding: 12px;
+    background: #585858;
+}

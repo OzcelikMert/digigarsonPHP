@@ -1,0 +1,22 @@
+.finance{margin-bottom: 20px;}
+.invoices,.trust{
+    padding: 15px;
+    border-radius: 5px;
+    height: calc(100vh - 140px);
+}
+
+.trust .list, .cost .list{
+    height: calc(100vh - 155px);
+}
+
+.trust .list,.invoices, .cost .list{
+    overflow: hidden;
+    overflow-y: scroll !important;
+}
+
+/* Payment Buttons */
+.payment-types button {
+    padding: 50px;
+    border: 2px solid var(--theme-modal-body);
+    font-size: 20px;
+}

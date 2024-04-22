@@ -1,0 +1,40 @@
+:root {
+    --font-family: 'Signika', sans-serif;
+
+    --theme-bg: #efeff6;
+    --theme-bg2: #464646;
+    --theme-bg3: #333;
+    --theme-card: #fff;
+    --theme-navbar: #fff;
+    --theme-footer: #333;
+    --theme-modal-content: #fff;
+    --theme-modal-header: #fff;
+    --theme-modal-body: #f1f1f1;
+    --theme-table-text: white;
+    --thema-table-bg-hover: #555;
+    --theme-border-radius: 5px;
+
+    --color-1: #30b330;
+    --color-2: #f97d35;
+    --color-3: #d91919;
+    --color-4: #007bff;
+    --color-5: #333;
+    --color-6: #fff;
+    --color-7: #efeff6;
+    --color-8: #e9ecef;
+    --color-9: #e98407;
+    --color-10: #4e4e4e;
+    --color-11: #04be15;
+
+    --text-color: #333;
+    --a-color: blue;
+    --h-color: #333;
+    --i-color: #fff;
+
+    --input-text-color: #495057;
+    --input-bg-color: #fff;
+    --input-border-color: #ced4da;
+    --input-outline-border-color: #80bdff;
+    --input-outline-box-shadow: 0 0 0 0.1rem rgba(0,123,255,.25);
+
+}

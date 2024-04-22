@@ -1,0 +1,36 @@
+:root{
+    /*Fonts */
+    --font-family : 'Signika', sans-serif;
+
+    --theme-bg: #333;
+    --theme-bg2: #464646;
+    --theme-bg3: #333;
+    --theme-card: #444;
+    --theme-navbar: #444;
+    --theme-footer: #333;
+    --theme-modal-content: #444;
+    --theme-modal-header: #333;
+    --theme-modal-body: #333;
+    --theme-table-text: white;
+    --thema-table-bg-hover: #555;
+
+
+    /* COLORS */
+    --color-1: #30b330;
+    --color-2: #f97d35;
+    --color-3: #d91919;
+    --color-4: #007bff;
+    --color-5: #333;
+    --color-6: #fff;
+    --color-7: #efeff6;
+    --color-8: #e9ecef;
+
+    --text-color: #fff;
+    --a-color: #fff;
+    --h-color: #fff;
+
+    --input-bg-color: #333;
+    --input-text-color: #fff;
+    --input-border-color: transparent;
+}
+

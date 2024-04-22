@@ -1,0 +1,54 @@
+<?php
+namespace integrations\companies\integrated\yemek_sepeti\php\functions;
+
+require "../../../../../../matrix_library/php/auto_loader.php";
+
+use config\sessions;
+use config\type_tables_values\integrate_types;
+use integrations\companies\integrated\sameparts\functions\get\service;
+use integrations\companies\integrated\yemek_sepeti\php\functions\set\message_successful;
+use integrations\companies\integrated\yemek_sepeti\php\functions\set\update_order;
+use matrix_library\php\operations\user;
+use matrix_library\php\operations\variable;
+use sameparts\php\ajax\echo_values;
+
+/* CONST Values */
+class post_keys {
+    const SET_TYPE = "set_type", USER_NAME = "user_name", PASSWORD = "password";
+}
+
+class set_types {
+    const MESSAGE_SUCCESSFUL = 0x0001, UPDATE_ORDER = 0x0002;
+}
+/* end CONST Values */
+
+$echo = new echo_values();
+$sessions = new sessions();
+
+if(
+user::check_sent_data([post_keys::SET_TYPE])
+) {
+    variable::clear_all_data($_POST);
+
+    if(user::post(post_keys::USER_NAME) && user::post(post_keys::PASSWORD)){
+        $sessions->set->INTEGRATION(
+            sessions::INTEGRATION_KEYS()::YEMEK_SEPETI,
+            new \config\sessions\integrations\results(user::post(post_keys::USER_NAME), user::post(post_keys::PASSWORD))
+        );
+    }
+
+    $service = service::get($sessions, integrate_types::YEMEK_SEPETI);
+
+    switch (user::post(post_keys::SET_TYPE)){
+        case set_types::MESSAGE_SUCCESSFUL:
+            (new message_successful($service, $sessions, $echo));
+            break;
+        case set_types::UPDATE_ORDER:
+            (new update_order($service, $sessions, $echo));
+            break;
+    }
+
+}
+
+$echo->return();
+/* end Functions */

@@ -1,0 +1,23 @@
+input.checkbox-lg {
+    height: 25px;
+    width: 25px;
+    position: relative;
+    top: 5px;
+}
+
+fieldset {
+    border: 5px solid green;
+}
+
+legend {
+    color: white;
+    padding: 5px 10px;
+    width: unset;
+}
+
+.e_permissions {
+    margin: 5px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: auto auto auto;
+}

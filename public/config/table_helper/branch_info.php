@@ -1,0 +1,35 @@
+<?php
+namespace config\table_helper;
+
+class branch_info {
+    const TABLE_NAME = "branch_info",
+        ALL = self::TABLE_NAME.".*",
+        ID = self::TABLE_NAME.".id",
+        NAME = self::TABLE_NAME.".name",
+        MAIN_ID = self::TABLE_NAME.".main_id",
+        TYPE_ID = self::TABLE_NAME.".type_id",
+        CURRENCY_ID = self::TABLE_NAME.".currency_id",
+        LICENSE_TIME_ID = self::TABLE_NAME.".license_time_id",
+        LICENSE_TYPE_ID = self::TABLE_NAME.".license_type_id",
+        LICENSE_DATE_END = self::TABLE_NAME.".license_date_end",
+        CREATE_DATE = self::TABLE_NAME.".create_date",
+        OPEN_TIME = self::TABLE_NAME.".open_time",
+        CLOSE_TIME = self::TABLE_NAME.".close_time",
+        ACTIVE = self::TABLE_NAME.".is_active",
+        LOGIN_MESSAGE = self::TABLE_NAME.".login_message",
+        IP = self::TABLE_NAME.".ip",
+        IP_BLOCK = self::TABLE_NAME.".ip_block",
+        ONLINE_PAYMENT = self::TABLE_NAME.".online_payment",
+        TAKE_AWAY_TIME = self::TABLE_NAME.".take_away_time",
+        TAKE_AWAY_AMOUNT = self::TABLE_NAME.".take_away_amount",
+        TAKE_AWAY_ACTIVE = self::TABLE_NAME.".take_away_active",
+        QR_DISCOUNT = self::TABLE_NAME.".qr_discount",
+        QR_ACTIVE = self::TABLE_NAME.".qr_active",
+        WAITER_APP_LIMIT = self::TABLE_NAME.".waiter_app_limit",
+        POS_APP_LIMIT = self::TABLE_NAME.".pos_app_limit",
+        ADDRESS = self::TABLE_NAME.".address",
+        LOGO = self::TABLE_NAME.".logo",
+        LANGUAGE_ID = self::TABLE_NAME.".language_id",
+        IS_MAIN = self::TABLE_NAME.".is_main",
+        IS_CONFIRM = self::TABLE_NAME.".is_confirm";
+}

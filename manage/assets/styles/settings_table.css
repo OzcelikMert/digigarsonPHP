@@ -1,0 +1,30 @@
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ul.draggable-ul li.placeholder {
+    position: relative;
+    /** More li styles **/
+}
+ul.draggable-ul li.placeholder:before {
+    position: absolute;
+    /** Define arrowhead **/
+}
+
+.table-sections-sort{
+    list-style: auto;
+    color: white;
+    font-size: 20px;
+}
+
+.table-sections-sort li {
+    border: 1px solid;
+    padding: 6px;
+    margin: 6px 0px;
+}
