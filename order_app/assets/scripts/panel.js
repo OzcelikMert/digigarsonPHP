@@ -1074,27 +1074,22 @@ let page_panel = (function() {
 			let self = this;
 			function set_events(){
 				$(document).on("click",self.class_list.OPEN_BUTTON,function (){
-					if (main.data_list.USER.INFO.user_id > 0){
+					//if (main.data_list.USER.INFO.user_id > 0){
 						Swal.fire({
 							title: `<strong>${language.data.SERVICES}</strong>`,
 							html: self.crete_elements(),
 							showConfirmButton: false
 						})
-					}else {
-						Swal.fire({
-							title:`<strong>${language.data.SERVICES}</strong>`,
-							html: `<p>${language.data.REG_OR_LOGIN}</p><p>${language.data.REQ_WITHOUT_LOGGIN}</p>`
-						}).then(function () {
-							pages.open("login_and_register");
-						})
-					}
+					/*}else {
+						pages.open("login_and_register");
+					}*/
 				});
 				$(document).on("click",self.class_list.SEND_BUTTON,function (){
 					let element = $(this);
 					let id = parseInt(element.attr("notification-id"));
 					let name = element.text();
 					Swal.fire({
-						title: `"${name}" ${language.data.SEND_NAMED_REQ}`,
+						title: `"${name}"`,
 						showDenyButton: true,
 						showCancelButton: true,
 						confirmButtonText: `${language.data.ACCEPT},${language.data.SUBMIT}`,

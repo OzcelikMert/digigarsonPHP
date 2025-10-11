@@ -14,7 +14,7 @@ abstract class helper extends tags{
      * Do it <b>true</b> if u want to see sql query string
      * @var bool
      */
-    public bool $show_sql = true;
+    public bool $show_sql = false;
     /**
      * Helps in where conditions
      * @var db_where

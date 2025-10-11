@@ -51,9 +51,9 @@ class db extends mysql {
      */
     private function connection_database_type(): mysqli {
         return match ($this->database_type) {
-            database_list::LIVE_MYSQL_1 => mysqli_connect("45.144.154.89:3306", "test_pos_app", 'S6zKyjCQlIobBCVEly0XCG7tD5zyfT!T!7!dhYw5m7Euf@X@OcgGqen^8!m0H%9A', "test_pos_app"),
-            database_list::TURKEY_ADDRESS => mysqli_connect("45.144.154.89:3306", "turkey_address", "ew37O716u&E1E3tzFIfu3gI^51gfeHtJ", "turkey_address"),
-            database_list::BACKUP_MYSQL_1 => mysqli_connect("45.144.154.89:3306", "test_pos_app_backup", 'Q3A*Gt6OapTv#Vz916#udfQNmcaJL7JPVIH5s4rPPtTj*YypO^^lE2IAd99E8UJk', "test_pos_app_backup"),
+            database_list::LIVE_MYSQL_1 => mysqli_connect("localhost", "root", '', "pos_app"),
+            database_list::TURKEY_ADDRESS => mysqli_connect("localhost", "root", "", "turkey_address"),
+            database_list::BACKUP_MYSQL_1 => mysqli_connect("localhost", "root", '', "pos_app_backup"),
         };
     }
 }

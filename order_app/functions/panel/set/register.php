@@ -181,7 +181,7 @@ class register{
         }
     }
 
-    #[ArrayShape(["login" => "bool", "id" => "int|mixed", "name" => "mixed|string", "phone" => "mixed|null", "user_id" => "string", 3 => "string"])]
+    //#[ArrayShape(["login" => "bool", "id" => "int|mixed", "name" => "mixed|string", "phone" => "mixed|null", "user_id" => "string", 3 => "string"])]
     function get_check_user_token(db $db, get $session, $token, echo_values &$echo) : array{
         $data = array(
             "login" => false,

@@ -45,7 +45,6 @@ class sessions extends keys{
 
     public function create() : void{
         $data = array();
-
         $data = match ($this->application_name){
             settings::application_names()::POS => array(
                 keys::BRANCH_ID => $this->get->BRANCH_ID,
