@@ -1,4 +1,4 @@
-let print_manager = null;
+/*let print_manager = null;
 if (window.module) module = window.module;
 
 const electron = window.require('electron');
@@ -94,4 +94,4 @@ print_manager =  (function() {
     return print_manager;
 })();
 
-if (typeof module === 'object') {window.module = module; module = undefined;}
+if (typeof module === 'object') {window.module = module; module = undefined;}*/

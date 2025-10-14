@@ -16,7 +16,7 @@ let Safe = (function() {
         let time = today.getHours() + ":" + today.getMinutes();
 
         invoice_info = {
-            BranchName: (typeof app === "undefined") ? main.data_list.BRANCH_INFO.name : app.printer.safe.name,
+            BranchName: (typeof app === "undefined") ? main.data_list.BRANCH_INFO.name : app.printer.title,
             OrderDate: date,
             OrderTime: time,
             OrderID: data.orders[0].no,

@@ -91,7 +91,7 @@ let page_settings = ( function (){
         get_printer_groups: function (){
             let html = "";
             app.printer.groups.forEach(function (e){
-                html += `<tr class="e_printer_group" group-name="${e.name}" printer-name="${e.printer_name}"><td>${e.name}</td><td><button type="button" class="btn w-100 btn-s3 e_del_group"><lang>DELETE</lang></land></button></td></tr>`;
+                html += `<tr class="e_printer_group" group-name="${e.name}" printer-name="${e.printerName}"><td>${e.name}</td><td><button type="button" class="btn w-100 btn-s3 e_del_group"><lang>DELETE</lang></land></button></td></tr>`;
             })
             $("#form_printer_settings .e_printer_groups").html(html)
         },
@@ -141,7 +141,7 @@ let page_settings = ( function (){
         get_printer_groups: function (){
             let html = "";
             app.printer.groups.forEach(function (e){
-                html += `<tr group-name="${e.name}" printer-name="${e.printer_name}" >
+                html += `<tr group-name="${e.name}" printer-name="${e.printerName}" >
                             <td class="e_printer_group" function="edit">${e.name}</td>
                             <td class="e_printer_group" function="del"><button type="button" class="btn w-100 btn-s3" >${language.data.DELETE}</button></td>
                        </tr>`;
@@ -161,8 +161,8 @@ let page_settings = ( function (){
                     })
                     $(`${self.id_list.FORM} [name=printer]`).html(options)
                     $(`${self.id_list.FORM} [name=safe_printer]`).html(options)
-                    $(`${self.id_list.FORM} [name=safe_printer] option[value='${app.printer.safe.printer_name}']`).attr('selected','selected');
-                    $(`${self.id_list.FORM} [name=title]`).val(app.printer.safe.name)
+                    $(`${self.id_list.FORM} [name=safe_printer] option[value='${app.printer.safePrinterName}']`).attr('selected','selected');
+                    $(`${self.id_list.FORM} [name=title]`).val(app.printer.title)
                     self.get_printer_groups();
                 })
                 $(`${self.id_list.FORM} .e_new_group_btn`).on("click",function (){

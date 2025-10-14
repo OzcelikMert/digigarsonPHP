@@ -32,7 +32,7 @@ class table_helper_creator{
             "table_name",
             "information_schema.tables",
             "",
-            "table_schema = 'test_pos_app'"
+            "table_schema = 'pos_app'"
         )->rows;
 
 
@@ -52,7 +52,7 @@ class table_helper_creator{
             "COLUMN_NAME",
             "INFORMATION_SCHEMA.COLUMNS",
             "",
-            "TABLE_SCHEMA = 'test_pos_app' AND TABLE_NAME = '$table_name'"
+            "TABLE_SCHEMA = 'pos_app' AND TABLE_NAME = '$table_name'"
         )->rows;
 
         $value["top"] = "<?php\nnamespace config\\table_helper;\n";

@@ -6,9 +6,7 @@ let invoice = (function () {
     let view = false;
     let order_id = 0;
     let interval_auto_print = null;
-    let auto_print = false;
-    let printer_ajax_path = `../../${settings.paths.primary.PHP}orders/`;
-    let multi_print_data = [];
+    let printer_ajax_path = `${settings.paths.primary.PHP}orders/`;
     invoice.table_and_section = null;
     invoice.user_name = null;
     invoice.return_html = false;
@@ -25,7 +23,7 @@ let invoice = (function () {
         Z_REPORT: 4
     }
 
-    function invoice(name,type,invoce_type,id = 0, data = Array(),address = ""){
+    function invoice(name,type,invoce_type,id = 0, data = Array(),address_str = ""){
         printer_name = name;
         switch (invoce_type){
             case invoice.print_invoce_type.PAYMENT_RECEIPT:
@@ -36,8 +34,8 @@ let invoice = (function () {
                     invoice_data = invoice.get_data(type,id,order_id);
                 }
                 if (invoice.print_type.VIEW === type) view = true; //fiş görüntüleme
-                if (invoice.return_html) return safe_invoice(address);
-                safe_invoice(address);
+                if (invoice.return_html) return safe_invoice(address_str);
+                safe_invoice(address_str);
                 break;
             case invoice.print_invoce_type.KITCHEN:
             case invoice.print_invoce_type.CANCEL:
@@ -45,6 +43,8 @@ let invoice = (function () {
                 kitchen_invoice(data);
                 break;
             case invoice.print_invoce_type.Z_REPORT:
+                if (invoice.print_type.VIEW === type) view = true;
+                if (invoice.return_html) return z_report_invoice(data);
                 z_report_invoice(data);
                 break;
         }
@@ -55,6 +55,7 @@ let invoice = (function () {
             let p = array_list.find(main.data_list.PRODUCTS,parseInt(product.id),"id")
             product.quantity_id = p.quantity_id;
             product.name = p.name;
+
             product.options.forEach(function (option){
                 option.name = array_list.find(main.data_list.PRODUCT_OPTIONS_ITEMS,parseInt(option.option_item_id),"id").name
             })
@@ -62,13 +63,12 @@ let invoice = (function () {
         data.table = "Kasa Satış"
         return data;
     }
-    invoice.setPrint = function (value,printer = app.printer.safe.printer_name,multi_print=false){
-        if (!multi_print){
-            app.printer_settings.print_invoice(printer,value);
-        }else if(multi_print){
-            value.printer = printer;
-            multi_print_data.push(value)
-            console.log("add multi_print_data");
+    function setPrint(value,printer_name = app.printer.safe.printer_name){
+        if (!view){
+            app.printer_settings.print_invoice(printer_name,value);
+        }else {
+            view = false;
+            app.printer_settings.view_invoice(printer_name,value);
         }
     }
 
@@ -77,14 +77,17 @@ let invoice = (function () {
         let e = new Safe(invoice_data,address_str);
         let data = e.invoice()
         if (invoice.return_html && view) return data.html;
-        invoice.setPrint(data);
+        setPrint(data.html);
     }
     function z_report_invoice(invoice_data){
         console.log(invoice_data)
-        invoice_data.info = {"currency": "₺",safe: 0}
+        if(typeof invoice_data.info === "undefined") invoice_data.info = {};
+        invoice_data.info.currency = "₺";
+        if(typeof invoice_data.info.safe === "undefined") invoice_data.info.safe = 0;
         let e = new z_report(invoice_data);
-        let data = e.invoice()
-        invoice.setPrint(data);
+        let data = e.invoice();
+        if (invoice.return_html && view) return data.html;
+        setPrint(data.html);
     }
     function kitchen_invoice(data = Array()){
         console.log(data);
@@ -146,10 +149,10 @@ let invoice = (function () {
             if (print_page.products.length > 0){
                 let e = new Kitchen(info,print_page);
                 let data = e.invoice()
-                helper.log(data,"kitchen_invoice send set print")
-                invoice.setPrint(data,print_page.printer_name,true);
+                setPrint(data.html,print_page.printer_name);
             }
         })
+
     }
     function get_table_string(table_id){
         try {
@@ -163,14 +166,16 @@ let invoice = (function () {
         }
     }
 
-    invoice.z_report = function(data){
-        invoice(
+    invoice.z_report = function(data, is_view = false){
+        let type = (is_view) ? invoice.print_type.VIEW : invoice.print_type.ORDER
+        return invoice(
             null,
-            null,
+            type,
             invoice.print_invoce_type.Z_REPORT,
             null,
             data
         );
+
     }
     invoice.payment_receipt = function (data,table_id = 0){
         order_id = 0;
@@ -204,16 +209,13 @@ let invoice = (function () {
     invoice.auto_print = function (){
         interval_auto_print = setInterval(function (){
             if (app.printer.groups.length > 0){
-                console.log("-- INVOICE.AUTO_PRINT --")
-                auto_print = true;
+                console.log("INVOICE.AUTO_PRINT: get invoices")
                 $.ajax({
                     url: `${printer_ajax_path}set.php`,
                     type: "POST",
                     data: {set_type : 9},
                     success: function (data) {
                         data = JSON.parse(data);
-                        console.log(data)
-                        if (data.rows.length > 0) print_manager.manager.add_print_ajax_data_count(data.rows.length)
                         data.rows.forEach(function (item){
                             item.data = JSON.parse(item.data);
 
@@ -233,18 +235,12 @@ let invoice = (function () {
                                     break;
                             }
                         })
-                        if (multi_print_data.length > 0) {
-                            console.log("multi print data girdi")
-                            let data = multi_print_data;
-                            multi_print_data = [];
-                            app.printer_settings.print_multi_invoice(data);
-                            print_manager.manager.add_print_data_log(data);
-                            auto_print = false;
-                        }
-                    }, timeout: settings.ajax_timeouts.SLOW
+                    }, timeout: settings.ajax_timeouts.FAST
                 });
-            }else {clearInterval(print_interval)}
-        },settings.ajax_timeouts.NORMAL)
+            }else {
+                clearInterval(print_interval);
+            }
+        },settings.ajax_timeouts.FAST)
     }
     invoice.waiter_invoice = function (name,type,invoce_type,id = 0, invoice_order_id= 0 ){
         order_id = invoice_order_id;
@@ -264,18 +260,18 @@ let invoice = (function () {
         }
 
         if (type === invoice.print_type.TABLE){
-           //get table orders
+            //get table orders
             print_data.orders = (order_id === 0)
                 ? array_list.find_multi(main.data_list.ORDERS,get_id,"table_id")
                 : array_list.find_multi(main.data_list.ORDERS,order_id,"id");
 
-           //table get order id
-           print_data.orders.forEach(function(e){
-               if (order_id === 0 || order_id === e.id){
-                   print_data.orders_id.push(e.id)
-                   table_id = e.table_id;
-               }
-           });
+            //table get order id
+            print_data.orders.forEach(function(e){
+                if (order_id === 0 || order_id === e.id){
+                    print_data.orders_id.push(e.id)
+                    table_id = e.table_id;
+                }
+            });
 
         }else if(type === invoice.print_type.ORDER || type === invoice.print_type.VIEW){
             //get order id
@@ -287,10 +283,11 @@ let invoice = (function () {
             : (table_id > 0) ? get_table_string(table_id) : "";
 
         main.data_list.ORDER_PRODUCTS.forEach(function(product){
-            if(product.status === helper.db.order_product_status_types.CANCEL) return;
+            console.log(product);
+            //if(product.status == helper.db.order_product_status_types.CANCEL) return;
             if(print_data.orders_id.includes(product.order_id)) {
                 let product_data = {};
-                if (product.status === helper.db.order_product_status_types.CATERING){
+                if (product.status === helper.db.order_product_status_types.CATERING || product.status === helper.db.order_product_status_types.CANCEL){
                     product.price = 0;
                 }
                 if(product.type === helper.db.order_product_types.DISCOUNT){
@@ -310,13 +307,16 @@ let invoice = (function () {
 
         // Get orders Options and Options item product.option array
         print_data.products.forEach(function(product){
-            let options_items = array_list.find_multi(main.data_list.ORDER_PRODUCT_OPTIONS,product.id,"order_product_id")
-
+            let options_items = array_list.find_multi(main.data_list.ORDER_PRODUCT_OPTIONS,product.id,"order_product_id");
             options_items.forEach(function (item){
-                item.name = array_list.find( main.data_list.PRODUCT_OPTIONS_ITEMS,item.option_item_id,"id").name;
-                //get main options
-                if (array_list.find(main.data_list.PRODUCT_OPTIONS,item.option_id,"id") === undefined){
-                    print_data.options.push(array_list.find(main.data_list.PRODUCT_OPTIONS,item.option_id,"id"))
+                console.log(item);
+                let option_item = array_list.find( main.data_list.PRODUCT_OPTIONS_ITEMS,item.option_item_id,"id");
+                if(typeof option_item !== "undefined"){
+                    item.name = option_item.name;
+                    //get main options
+                    if (array_list.find(main.data_list.PRODUCT_OPTIONS,item.option_id,"id") === undefined){
+                        print_data.options.push(array_list.find(main.data_list.PRODUCT_OPTIONS,item.option_id,"id"))
+                    }
                 }
             })
 
@@ -334,6 +334,7 @@ let invoice = (function () {
                     quantity_id: product.quantity_id,
                     order_id: product.order_id,
                     id: product.id,
+                    status: product.status,
                 })
             }else {
                 catering_products.push({
@@ -346,6 +347,7 @@ let invoice = (function () {
                     quantity_id: product.quantity_id,
                     order_id: product.order_id,
                     id: product.id,
+                    status: product.status,
                 });
             }
         });
@@ -356,7 +358,7 @@ let invoice = (function () {
 
         //Merge Product and Options
         let merge_products = [],qty,price,option_list,last_product = {};
-      //  helper.log(product_counts,"PRODUCT COUNTS")
+        //  helper.log(product_counts,"PRODUCT COUNTS")
 
         //for (const item in product_counts) {
         product_counts.forEach(function (item) {
@@ -366,10 +368,10 @@ let invoice = (function () {
             //last_product = product_counts[item][0];
             last_product = item[0];
 
-           // console.log("item ----------")
-           // console.log(item)
+            // console.log("item ----------")
+            // console.log(item)
 
-           // product_counts[item].forEach(function (data){ //ürün
+            // product_counts[item].forEach(function (data){ //ürün
             item.forEach(function (data){ //ürün
                 qty += data.qty;
                 price += data.price;
@@ -388,21 +390,21 @@ let invoice = (function () {
                     })
                 }else {
                     data.options.forEach(function (option){ //opsiyon
-                       let index = array_list.index_of(option_list,option.option_item_id,"option_item_id");
-                       if (index === -1){
-                           option_list.push({
-                              id: option.id,
-                              name: option.name,
-                              price: option.price,
-                              qty: option.qty,
-                              option_id: option.option_id,
-                              option_item_id: option.option_item_id,
-                              order_product_id: option.order_product_id,
-                           });
-                       }else {
-                           option_list[index].qty += option.qty;
-                           option_list[index].price += option.price;
-                       }
+                        let index = array_list.index_of(option_list,option.option_item_id,"option_item_id");
+                        if (index === -1){
+                            option_list.push({
+                                id: option.id,
+                                name: option.name,
+                                price: option.price,
+                                qty: option.qty,
+                                option_id: option.option_id,
+                                option_item_id: option.option_item_id,
+                                order_product_id: option.order_product_id,
+                            });
+                        }else {
+                            option_list[index].qty += option.qty;
+                            option_list[index].price += option.price;
+                        }
                     });
                 }
             });
@@ -415,7 +417,7 @@ let invoice = (function () {
 
         print_data.products = merge_products.concat(catering_products);
         //End
-       // helper.log(print_data,"PRINT DATA LAST")
+        // helper.log(print_data,"PRINT DATA LAST")
         return print_data;
     }
 

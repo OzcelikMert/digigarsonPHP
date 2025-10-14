@@ -40,7 +40,6 @@ if(
     $echo->rows["currency"] = $sessions->get->CURRENCY;
     $echo->rows["permissions"] = $sessions->get->PERMISSION;
     $echo->rows["caller_id_active"] = $sessions->get->CALLER_ID_ACTIVE;
-    $echo->rows["qweqwe"] = ((user::post(post_keys::PAGE_NAME) != "finance") ? $db->where->not_like([tbl5::IS_DELETED => 1]) : "");
     $echo->return();
 }
 

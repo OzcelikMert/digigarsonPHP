@@ -1,6 +1,6 @@
 let g_token = null;
 $(document).ready(function (){
-    get_token(); 
+    app.users.get_token();
 })
 
 let page_index = (function() {
