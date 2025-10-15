@@ -83,24 +83,26 @@
     </div>
 
     <div class="row mt-5 h-25">
+        <label class="text-light"><b>SEARCH</b></label>
+        <input type="text" class="form-control mb-3" placeholder="..." name="search">
         <table class="e_language_table language-table table table-hover table-light table-sticky">
             <thead class="thead-dark">
                 <tr>
                     <th></th>
                     <th></th>
-                    <th width="25%">Key</th>
-                    <th width="25%">TR</th>
-                    <th width="25%">EN</th>
-                    <th width="25%">AR</th>
-                    <th width="25%">DE</th>
-                    <th width="25%">FR</th>
-                    <th width="25%">İT</th>
-                    <th width="25%">NL</th>
-                    <th width="25%">PT</th>
-                    <th width="25%">RO</th>
-                    <th width="25%">RU</th>
-                    <th width="25%">SP</th>
-                    <th width="25%">ZH</th>
+                    <th class="cursor-pointer" key="const_name" width="25%">Key</th>
+                    <th class="cursor-pointer" key="name_tr" width="25%">TR</th>
+                    <th class="cursor-pointer" key="name_en" width="25%">EN</th>
+                    <th class="cursor-pointer" key="name_ar" width="25%">AR</th>
+                    <th class="cursor-pointer" key="name_de" width="25%">DE</th>
+                    <th class="cursor-pointer" key="name_fr" width="25%">FR</th>
+                    <th class="cursor-pointer" key="name_it" width="25%">IT</th>
+                    <th class="cursor-pointer" key="name_nl" width="25%">NL</th>
+                    <th class="cursor-pointer" key="name_pt" width="25%">PT</th>
+                    <th class="cursor-pointer" key="name_ro" width="25%">RO</th>
+                    <th class="cursor-pointer" key="name_ru" width="25%">RU</th>
+                    <th class="cursor-pointer" key="name_sp" width="25%">SP</th>
+                    <th class="cursor-pointer" key="name_zh" width="25%">ZH</th>
 
                 </tr>
             </thead>

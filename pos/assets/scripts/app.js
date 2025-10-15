@@ -25,8 +25,8 @@ app = (function () {
     GET_PRINTER_SETTINGS: "getPrinterSettings",
     SAVE_PRINTER_SETTINGS: "setPrinterSettings",
     /* -------- Settings ------------ */
-    GET_APP_SETTINGS: "getAppSettings",
-    SAVE_APP_SETTINGS: "setAppSettings",
+    GET_CUSTOMIZE_SETTINGS: "getCustomizeSettings",
+    SAVE_CUSTOMIZE_SETTINGS: "setCustomizeSettings",
 
     SEND_MAIN_DATA: "sendMainData",
 
@@ -35,6 +35,8 @@ app = (function () {
 
     /* -------- User ------------ */
     GET_TOKEN: "getToken",
+    GET_USER: "getUser",
+    SET_USER: "setUser",
   };
 
   app.printer_types = {
@@ -51,7 +53,7 @@ app = (function () {
   //data and settings
   app.printer = null;
   app.printer_list = null;
-  app.settings = null;
+  app.customize_settings = null;
 
   //classes
   app.app_settings = null;
@@ -91,25 +93,12 @@ app = (function () {
           helper.log("Result: " + result);
         });
     },
-    create_printer_settings: function () {
-      app.printer = {
-        cancelPrinterName: "",
-        safePrinterName: "",
-        title: "",
-        settings: {
-          callerId: false,
-          payyedPrint: false,
-          cancelInvoice: false,
-        },
-        groups: [],
-      };
-    },
     add_group: function (group_name, printer_name) {
       let index = array_list.index_of(app.printer.groups, group_name, "name");
       if (index === -1) {
         app.printer.groups.push({
           name: group_name,
-          printeName: printer_name,
+          printeNamer: printer_name,
           categories: Array(),
         });
       } else {
@@ -121,11 +110,8 @@ app = (function () {
     },
     edit_group: function (index, group_name, printer_name) {
       app.printer.groups[index]["name"] = group_name;
-      app.printer.groups[index]["printeName"] = printer_name;
-    },
-    edit_safe: function (branch_name = "", printer_name = "") {
-      app.printer.safePrinterName = printer_name;
-      app.printer.title = branch_name;
+      app.printer.groups[index]["printerName"] = printer_name;
+      this.set_printer_settings();
     },
     print_invoice: function (printer_name, print_data) {
       helper.log(printer_name, "print_data");
@@ -155,7 +141,6 @@ app = (function () {
       helper.log("get_printer_settings");
       self.get_printer_settings().then(async function () {
         if (app.printer == null) {
-          await self.create_printer_settings();
           await self.set_printer_settings();
           await self.get_printer_settings();
           helper.log("PRINTER_SETTINGS: set printer");
@@ -172,47 +157,13 @@ app = (function () {
     get: function () {
       let self = this;
       ipc
-        .invoke("function", app.listeners.GET_APP_SETTINGS)
+        .invoke(app.listeners.GET_CUSTOMIZE_SETTINGS)
         .then(async function (result) {
           let status = true;
           helper.log(result, "Result");
-          if (result == null) {
-            self.create();
-            self.set();
-          } else {
-            app.settings = result;
-          }
 
-          if (typeof app.settings.orders.payment_invoice_user == "undefined") {
-            app.settings.orders.payment_invoice_user = false;
-            status = false;
-          }
-          if (
-            typeof app.settings.orders.payment_invoice_show_quantity ==
-            "undefined"
-          ) {
-            app.settings.orders.payment_invoice_show_quantity = true;
-            status = false;
-          }
-          if (typeof app.settings.notifications == "undefined") {
-            app.settings.notifications = {};
-            status = false;
-          }
-          if (typeof app.settings.notifications.is_enable == "undefined") {
-            app.settings.notifications.is_enable = true;
-            status = false;
-          }
+          app.customize_settings = result;
 
-          if (!status) app.app_settings.set();
-
-          main.data_list.BARCODE_SYSTEM = app.settings.orders.barcode_system;
-
-          // if (!enable_print_manager) {
-          main.data_list.TRIGGER_PRODUCT_EDIT =
-            app.settings.orders.trigger_product_edit;
-          main.data_list.PAYMENT_INVOICE_USER =
-            app.settings.orders.payment_invoice_user;
-          // }
           helper.log("GET: APP_SETTINGS");
           app.ready.app_settings = true;
           initialize_main();
@@ -220,33 +171,20 @@ app = (function () {
     },
     set: function () {
       ipc
-        .invoke(app.listeners.SAVE_APP_SETTINGS, app.settings)
+        .invoke(app.listeners.SAVE_CUSTOMIZE_SETTINGS, app.customize_settings)
         .then((result) => {
           helper.log("SET: APP_SETTINGS");
         });
     },
     send_main_data: function (data = {}, new_data = false) {
       data.new = new_data;
-      console.log(data);
+      console.log("send main data", data);
       
       ipc
         .invoke(app.listeners.SEND_MAIN_DATA, data)
         .then((result) => {
           helper.log("send_main_data_list");
         });
-    },
-    create: function () {
-      app.settings = {
-        orders: {
-          trigger_product_edit: false,
-          payment_invoice_user: false,
-          payment_invoice_show_quantity: true,
-          barcode_system: false,
-        },
-        notifications: {
-          is_enable: true,
-        },
-      };
     },
     initialize: async function () {
       let self = this;
@@ -356,6 +294,17 @@ app = (function () {
         g_token = result;
         $("#device_token_input").val(g_token);
         _index = new page_index();
+      });
+    },
+    get_user: function (id) {
+      ipc.invoke(app.listeners.GET_USER).then((result) => {
+        console.log(result);
+        
+      });
+    },
+    set_user: function (id = 0, isDarkMode = false) {
+      ipc.invoke(app.listeners.GET_TOKEN, {id: 0, isDarkMode: false}).then((result) => {
+        console.log(result);
       });
     },
   };

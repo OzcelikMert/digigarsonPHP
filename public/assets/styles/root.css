@@ -187,6 +187,7 @@ input[type=checkbox].checkbox-xl  { width: 2.5rem !important; height: 2.5rem !im
 .scrool-y{overflow-x: hidden;overflow-y: auto;}
 .overflow-hidden{overflow: hidden !important;}
 .pointer-none{pointer-events: none;}
+.cursor-pointer{cursor: pointer;}
 /* -- -- */
 
 

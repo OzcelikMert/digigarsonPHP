@@ -1166,7 +1166,7 @@ let orders = (function () {
                     switch (function_name) {
                         case "add":
                             if(
-                                main.data_list.TRIGGER_PRODUCT_EDIT &&
+                                app.customize_settings.triggerProductOptionModal &&
                                 (
                                     typeof array_list.find(main.data_list.PRODUCT_LINKED_OPTIONS, id, "product_id") !== "undefined" ||
                                     array_list.find(main.data_list.PRODUCTS, id, "id").quantity_id != 1
@@ -2586,8 +2586,8 @@ let orders = (function () {
             set_events();
 
             let barcode_system_interval = setInterval(function (){
-                if (typeof app.settings !== "undefined"){
-                    if (app.settings.orders.barcode_system) {
+                if (typeof app.customize_settings !== "undefined"){
+                    if (app.customize_settings.enableBarcodeSystem) {
                         $("[function=read_barcode]").show();
                     }else {
                         $("[function=read_barcode]").attr("function","0");

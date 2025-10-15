@@ -22,8 +22,8 @@ let page_products = (function() {
         modal_translate_product.initialize();
         modal_translate_category.initialize();
         let barcode_system_interval = setInterval(function (){
-            if (typeof app.settings !== "undefined"){
-                if (app.settings.orders.barcode_system) modal_scales_products.initialize();
+            if (typeof app.customize_settings !== "undefined"){
+                if (app.customize_settings.enableBarcodeSystem) modal_scales_products.initialize();
                 clearInterval(barcode_system_interval)
             }
         },500)

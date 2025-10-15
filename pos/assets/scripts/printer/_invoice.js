@@ -351,7 +351,7 @@ let invoice = (function () {
                 });
             }
         });
-        print_data.user_name = ((typeof app == "undefined" || main.data_list.PAYMENT_INVOICE_USER) )
+        print_data.user_name = ((typeof app == "undefined" || app.printer.settings.showUserName) )
             ? (invoice.user_name !== null)
                 ? invoice.user_name : print_data.products[print_data.products.length-1].account_name
             : "";

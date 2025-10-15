@@ -3,45 +3,47 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h3 class="modal-title"><lang>PERSONALISE</lang></h3>
+                <h3 class="modal-title">
+                    <lang>PERSONALISE</lang>
+                </h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
 
             <form id="modal_customize_form">
                 <!-- Modal Body -->
-                <div class="modal-body p-0">
+                <div class="modal-body p-0 py-3">
                     <div class="container">
-                        <table class="table">
-                            <tr for="active_trigger_product_edit">
-                                <td><input class="checkbox-md pl-2" type="checkbox" name="active_trigger_product_edit"></td>
-                                <td><lang>ACTIVE_OPTION</lang></td>
-                            </tr>
+                        <div class="form-check my-3">
+                            <input class="checkbox-md form-check-input" type="checkbox" name="active_trigger_product_edit" id="active_trigger_product_edit">
+                            <label class="form-check-label pt-1 pl-4" for="active_trigger_product_edit">
+                                <lang>TRIGGER_PRODUCT_OPTION</lang>
+                            </label>
+                        </div>
 
-                            <tr for="payment_invoice_user">
-                                <td><input class="checkbox-md pl-2" type="checkbox" name="payment_invoice_user"></td>
-                                <td> <lang>SHOW_PERSON_TICKET</lang></td>
-                            </tr>
+                        <div class="form-check my-3">
+                            <input class="checkbox-md form-check-input" type="checkbox" name="barcode_system" id="barcode_system">
+                            <label class="form-check-label pt-1 pl-4" for="barcode_system">
+                                <lang>BARCODE_TRANSACTION</lang>(BETA)
+                            </label>
+                        </div>
 
-                            <tr for="barcode_system">
-                                <td><input class="checkbox-md pl-2" type="checkbox" name="barcode_system"></td>
-                                <td><lang>BARCODE_TRANSACTION</lang> (BETA)</td>
-                            </tr>
-
-                            <tr for="notifications">
-                                <td><input class="checkbox-md pl-2" type="checkbox" name="notifications"></td>
-                                <td><lang>Bildirimler & Gönderilen Servisler</lang></td>
-                            </tr>
-                        </table>
+                        <div class="form-check my-3">
+                            <input class="checkbox-md form-check-input" type="checkbox" name="notifications" id="notifications">
+                            <label class="form-check-label pt-1 pl-4" for="notifications">
+                                <lang>NOTIFICATIONS_AND_SERVICES</lang>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
-                    <button type="submit" class="btn bg-c1 text-c6"><lang>SAVE</lang></button>
+                    <button type="submit" class="btn bg-c1 text-c6">
+                        <lang>SAVE</lang>
+                    </button>
                 </div>
             </form>
 
         </div>
     </div>
 </div>
-

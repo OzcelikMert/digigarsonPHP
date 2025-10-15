@@ -68,7 +68,7 @@ let Safe = (function() {
             invoice_info.height +=  4.2;
 
             if ((product.quantity_id !== helper.db.quantity_types.PIECE)){
-                if(typeof app !== "undefined" && !app.settings.orders.payment_invoice_show_quantity) return;
+                if(typeof app !== "undefined" && !app.printer.settings.showQuantityName) return;
                /* if (![helper.db.quantity_types.KILOGRAM].includes(product.quantity_id)) {
                     console.log(`QTY: ${product.qty} quant: ${product.quantity}`)
                     qty = product.qty * parseFloat(product.quantity);

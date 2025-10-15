@@ -350,7 +350,6 @@ let main = (function () {
             ORDER_STATUS_TYPES: main.data_list.ORDER_STATUS_TYPES,
 
             PAYMENTS: main.data_list.PAYMENTS,
-            PAYMENT_INVOICE_USER: main.data_list.PAYMENT_INVOICE_USER,
             PAYMENT_STATUS_TYPES: main.data_list.PAYMENT_STATUS_TYPES,
             PAYMENT_TYPES: main.data_list.PAYMENT_TYPES,
             TRUST_ACCOUNTS: main.data_list.TRUST_ACCOUNTS,
@@ -381,7 +380,7 @@ let main = (function () {
         setTimeout(function () {
             helper.log("start notification timer")
             timers.notification = setInterval(function (){
-                if (app.settings.notifications.is_enable){
+                if (app.customize_settings.enableNotifications){
                     main.get_notification_related_things(main.get_type_for_notification_related_things.NOTIFICATIONS,true)
                 } else clearInterval(timers.notification)
             },settings.ajax_timeouts.FAST)

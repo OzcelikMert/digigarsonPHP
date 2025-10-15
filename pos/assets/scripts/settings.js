@@ -162,7 +162,9 @@ let page_settings = ( function (){
                     $(`${self.id_list.FORM} [name=printer]`).html(options)
                     $(`${self.id_list.FORM} [name=safe_printer]`).html(options)
                     $(`${self.id_list.FORM} [name=safe_printer] option[value='${app.printer.safePrinterName}']`).attr('selected','selected');
-                    $(`${self.id_list.FORM} [name=title]`).val(app.printer.title)
+                    $(`${self.id_list.FORM} [name=title]`).val(app.printer.title);
+                    $(`${self.id_list.FORM} input[name="payment_invoice_user"]`).prop("checked",  app.printer.settings.showUserName);
+                    $(`${self.id_list.FORM} input[name="payment_invoice_show_quantity"]`).prop("checked",  app.printer.settings.showQuantityName);
                     self.get_printer_groups();
                 })
                 $(`${self.id_list.FORM} .e_new_group_btn`).on("click",function (){
@@ -182,15 +184,16 @@ let page_settings = ( function (){
                     switch (type){
                         case "edit":
                             selected_group = true;
-                            let printer_name = element.attr("printer-name")
                             let group_name = element.attr("group-name")
                             index = array_list.index_of(app.printer.groups,group_name,"name")
                             self.get_categories(index);
-
+                            let printer_name = app.printer.groups[index].printerName;
+                            console.log(printer_name, app.printer.groups[index]);
+                            
                             $(`${self.id_list.FORM} .e_printer_groups tr.selected`).removeClass("selected")
                             element.addClass("selected");
-                            $("#form_printer_settings [name=printer] option").attr("selected",null)
-                            $("#form_printer_settings [name=printer]").find(`option[value="${printer_name}"]`).attr('selected','selected')
+                            $("#form_printer_settings [name=printer] option").attr("selected",null);
+                            $("#form_printer_settings [name=printer]").find(`option[value="${printer_name}"]`).attr('selected','selected');
                             break;
                         case "del":
                             let name = element.closest("tr").attr("group-name")
@@ -243,10 +246,10 @@ let page_settings = ( function (){
                     }
                 })
                 $(document).on("click",`${self.id_list.FORM} .e_save_printer_settings`,function (){
-                    app.printer_settings.edit_safe(
-                        $(`${self.id_list.FORM} [name=title]`).val(), //title
-                        $(`${self.id_list.FORM} [name=safe_printer]`).val() //printer name
-                    )
+                    app.printer.settings.showUserName = $(`${self.id_list.FORM} input[name="payment_invoice_user"]`).prop("checked");
+                    app.printer.settings.showQuantityName = $(`${self.id_list.FORM} input[name="payment_invoice_show_quantity"]`).prop("checked");
+                    app.printer.title = $(`${self.id_list.FORM} [name=title]`).val();
+                    app.printer.safePrinterName = $(`${self.id_list.FORM} [name=safe_printer]`).val();
                     app.printer_settings.set_printer_settings().then(()=> helper_sweet_alert.success(language.data.SUCCESS_SAVED));
                 })
 
@@ -264,10 +267,9 @@ let page_settings = ( function (){
 
             function set_events(){
                 $(document).on('shown.bs.modal',self.id_list.MODAL,function (){
-                    $(`${self.id_list.FORM} input[name="active_trigger_product_edit"]`).prop("checked", app.settings.orders.trigger_product_edit);
-                    $(`${self.id_list.FORM} input[name="payment_invoice_user"]`).prop("checked",  app.settings.orders.payment_invoice_user);
-                    $(`${self.id_list.FORM} input[name="payment_invoice_show_quantity"]`).prop("checked",  app.settings.orders.payment_invoice_show_quantity);
-                    $(`${self.id_list.FORM} input[name="barcode_system"]`).prop("checked",  app.settings.orders.barcode_system);
+                    $(`${self.id_list.FORM} input[name="active_trigger_product_edit"]`).prop("checked", app.customize_settings.triggerProductOptionModal);
+                    $(`${self.id_list.FORM} input[name="barcode_system"]`).prop("checked",  app.customize_settings.enableBarcodeSystem);
+                    $(`${self.id_list.FORM} input[name="notifications"]`).prop("checked",  app.customize_settings.enableNotifications);
                 })
                 $(`${self.id_list.FORM} input[name="active_trigger_product_edit"]`).on("change", function () {
                     if($(this).prop("checked")){
@@ -286,17 +288,9 @@ let page_settings = ( function (){
                 $(self.id_list.FORM).submit(function (e) {
                     e.preventDefault();
 
-                    app.settings.orders.trigger_product_edit = $(`${self.id_list.FORM} input[name="active_trigger_product_edit"]`).prop("checked");
-                    app.settings.orders.payment_invoice_user = $(`${self.id_list.FORM} input[name="payment_invoice_user"]`).prop("checked");
-                    app.settings.orders.payment_invoice_show_quantity = $(`${self.id_list.FORM} input[name="payment_invoice_show_quantity"]`).prop("checked");
-                    app.settings.orders.barcode_system = $(`${self.id_list.FORM} input[name="barcode_system"]`).prop("checked");
-                    app.settings.notifications.is_enable = $(`${self.id_list.FORM} input[name="notifications"]`).prop("checked");
-
-                    main.data_list.TRIGGER_PRODUCT_EDIT = app.settings.orders.trigger_product_edit
-                    main.data_list.PAYMENT_INVOICE_USER = app.settings.orders.payment_invoice_user
-                    main.data_list.PAYMENT_INVOICE_SHOW_QUANTITY = app.settings.orders.payment_invoice_show_quantity
-                    main.data_list.BARCODE_SYSTEM = app.settings.orders.barcode_system;
-
+                    app.customize_settings.triggerProductOptionModal = $(`${self.id_list.FORM} input[name="active_trigger_product_edit"]`).prop("checked");
+                    app.customize_settings.enableBarcodeSystem = $(`${self.id_list.FORM} input[name="barcode_system"]`).prop("checked");
+                    app.customize_settings.enableNotifications = $(`${self.id_list.FORM} input[name="notifications"]`).prop("checked");
 
                     app.app_settings.set();
                     helper_sweet_alert.success( language.data.PROCESS_SUCCESS_TITLE,language.data.INFORMATION_CONTENT);
