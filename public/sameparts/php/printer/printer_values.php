@@ -19,25 +19,32 @@ class printer_values{
     private string $user_name = "";
     private db $db;
     private int $print_type;
+    private bool $is_qr_order = false;
 
 
     public function __construct(
         db $db,
-        sessions $sessions = null,
-        mobile_get $mobile_sessions = null,
         $table_id,
         $order_id,
         $order_no,
-        $print_type = print_types::KITCHEN
+        $print_type = print_types::KITCHEN,
+        ?sessions $sessions = null,
+        ?mobile_get $mobile_sessions = null,
     ){
         $this->db = $db;
         $this->table_id = $table_id;
         $this->order_id = $order_id;
         $this->order_no = $order_no;
         $this->print_type = $print_type;
-        $this->branch_id = (int)($sessions != null) ? $sessions->get->BRANCH_ID : $mobile_sessions->SELECT_BRANCH_ID;
-        $this->user_name = (int)($sessions != null) ? "(yetkili) ".$sessions->get->USER_NAME : "(müşteri) ".$mobile_sessions->NAME;
-
+        if($sessions){
+            $this->branch_id = $sessions->get->BRANCH_ID;
+            $this->user_name = $sessions->get->USER_NAME;
+        }
+        if($mobile_sessions){
+            $this->branch_id = $mobile_sessions->SELECT_BRANCH_ID;
+            $this->user_name = $mobile_sessions->NAME;
+            $this->is_qr_order = true;
+        }
     }
 
     public function create(): results{
@@ -46,7 +53,8 @@ class printer_values{
             "type" => $this->print_type,
             "products" => $this->products,
             "orders" => [["table_id" => $this->table_id, "no" => $this->order_no]],
-            "user_name" => $this->user_name
+            "user_name" => $this->user_name,
+            "is_qr_order" => $this->is_qr_order
         );
 
        return $this->db->db_insert(

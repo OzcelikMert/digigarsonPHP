@@ -307,6 +307,8 @@ class send_order{
             user::post("user_address",$result->rows[0]["neighborhood"]);
            return $this->check_takeaway_branch_check_address($db,$session,$echo);
         }
+
+        return false;
     }
     private function check_takeaway_payment_method(db $db, get $session,echo_values &$echo): bool{
         if (user::post("takeaway")["payment_id"] == 1 || user::post("takeaway")["payment_id"] == 2){

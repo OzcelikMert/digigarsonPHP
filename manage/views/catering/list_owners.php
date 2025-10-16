@@ -1,5 +1,5 @@
 <div class="row mt-3">
-    <h2><lang>AUTHORIZED</lang></h2>
+    <h2><lang>AUTHORIZEDS</lang></h2>
     <table class="table table-striped table-sticky bg-theme-2 br text-left">
         <tr>
             <th>ID</th>

@@ -16,7 +16,7 @@ use config\table_helper\branch_users as tbl;
 use config\table_helper\branch_devices as tbl2;
 
 class post_keys { const PASSWORD = "password", TOKEN = "token", SECURITY_CODE = "security_code",TYPE = "type"; }
-class get_types { const SECURITY_CODE = 0x0001, TOKEN = 0x0002, PASSWORD = 0x0003,UN_TOKEN = 0X0004; }
+class get_types { const SECURITY_CODE = 0x0001, TOKEN = 0x0002, PASSWORD = 0x0003,UN_TOKEN = 0x0004; }
 
 if(user::check_sent_data([post_keys::TYPE])) {
     variable::clear_all_data($_POST);

@@ -7,7 +7,7 @@ let invoice = (function () {
     let order_id = 0;
     let interval_auto_print = null;
     let auto_print = false;
-    let printer_ajax_path = `../../${settings.paths.primary.PHP}orders/`;
+    let printer_ajax_path = `${settings.paths.primary.PHP}orders/`;
     let multi_print_data = [];
     invoice.table_and_section = null;
     invoice.user_name = null;
@@ -140,7 +140,7 @@ let invoice = (function () {
             OrderTime: time,
             OrderID: data.orders[0].no,
             Currency: "₺",
-            UserName: data.user_name
+            UserName: `(${data.is_qr_order ? language.data.CUSTOMER : language.data.AUTHORIZED}) ${data.user_name}`
         }
         print.forEach(function (print_page){
             if (print_page.products.length > 0){
@@ -238,7 +238,7 @@ let invoice = (function () {
                             let data = multi_print_data;
                             multi_print_data = [];
                             app.printer_settings.print_multi_invoice(data);
-                            print_manager.manager.add_print_data_log(data);
+                            // print_manager.manager.add_print_data_log(data);
                             auto_print = false;
                         }
                     }, timeout: settings.ajax_timeouts.SLOW
@@ -260,7 +260,8 @@ let invoice = (function () {
             "products": Array(),
             "orders" : Array(),
             "table": "",
-            "user_name": ""
+            "user_name": "",
+            "is_qr_order": false,
         }
 
         if (type === invoice.print_type.TABLE){

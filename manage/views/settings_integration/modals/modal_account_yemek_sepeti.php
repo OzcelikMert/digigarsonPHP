@@ -12,15 +12,15 @@
                 <!-- Modal Body -->
                 <div class="modal-body p-0">
                     <div class="card-body pt-1 row">
-                        <div class="col-md-12">
+                        <div class="e_account_info col-md-12">
                             <label><lang>USER_NAME</lang></label>
                             <input name="user_name" type="text" class="form-input" required>
                         </div>
-                        <div class="col-md-12 mt-2">
+                        <div class="e_account_info col-md-12 mt-2">
                             <label><lang>PASSWORD</lang></label>
                             <input name="password" type="password" class="form-input" required>
                         </div>
-                        <div class="col-md-12 mt-2">
+                        <div class="e_account_status col-md-12 mt-2">
                             <label>Durum</label>
                             <select name="status" class="form-input" required>
                                 <option value="1"><lang>OPEN</lang></option>

@@ -121,7 +121,7 @@ class insert {
                 table_id: user::post(post_keys_insert::TABLE_ID),
                 order_id: user::post(post_keys_insert::ORDER_ID),
                 order_no:  (user::post(post_keys_insert::NO) > 0) ? user::post(post_keys_insert::NO) : $this->get_order_no($db,$sessions,$echo),
-                print_type: print_types::KITCHEN
+                print_type: print_types::KITCHEN,
             );
             $this->add_order_products($db, $sessions);
             $this->invoice->create(); //create printer json and insert mysql

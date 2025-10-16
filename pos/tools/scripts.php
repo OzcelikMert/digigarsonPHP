@@ -4,7 +4,6 @@ $v = "?v=" . date("Ymdhis");
 
 
 <script>
-    let app = {};
     if (typeof module === 'object') {
         window.module = module;
         module = undefined;
@@ -47,5 +46,5 @@ $v = "?v=" . date("Ymdhis");
     <?php if (isset($_SESSION["permission"][10])) { ?><script src='./assets/scripts/caller_id.js<?= $v ?>'></script><?php } ?>
     <!-- INTEGRATIONS -->
     <script src="./../integrations/companies/integrated/integrated_companies.js<?= $v ?>"></script>
-    <?php if (unserialize($_SESSION["integrations"]["yemek_sepeti"])->status) { ?><script src="./../integrations/companies/integrated/yemek_sepeti/script/initialize.js<?= $v ?>"></script><?php } ?>
+    <?php if (unserialize($_SESSION["integrations"]["yemek_sepeti"])->status == 1) { ?><script src="./../integrations/companies/integrated/yemek_sepeti/script/initialize.js<?= $v ?>"></script><?php } ?>
 <?php } ?>

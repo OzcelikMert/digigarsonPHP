@@ -23,8 +23,7 @@ class index extends creator {
 
     }
     protected  function custom_links(): string {
-        return '<link rel="stylesheet" href="./assets/styles/index.css">'
-         .'<link rel="stylesheet" href="./assets/styles/language.js?=md5()">';
+        return '<link rel="stylesheet" href="./assets/styles/index.css">';
     }
     protected function custom_scripts(): string {
         return '<script src="./assets/scripts/index.js'.$this->v.'"></script>';

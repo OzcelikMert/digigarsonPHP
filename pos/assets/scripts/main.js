@@ -339,43 +339,13 @@ let main = (function () {
         main.get_integrate_related_things();
         set_events();
         start_timers();
-    }
-
-    main.send_main_data = function (){
-        app.app_settings.send_main_data({
-            ORDERS: main.data_list.ORDERS,
-            ORDER_TYPES:    main.data_list.ORDER_TYPES,
-            ORDER_PRODUCTS: main.data_list.ORDER_PRODUCTS,
-            ORDER_PRODUCT_OPTIONS:  main.data_list.ORDER_STATUS_TYPES,
-            ORDER_STATUS_TYPES: main.data_list.ORDER_STATUS_TYPES,
-
-            PAYMENTS: main.data_list.PAYMENTS,
-            PAYMENT_STATUS_TYPES: main.data_list.PAYMENT_STATUS_TYPES,
-            PAYMENT_TYPES: main.data_list.PAYMENT_TYPES,
-            TRUST_ACCOUNTS: main.data_list.TRUST_ACCOUNTS,
-
-            PRODUCTS:   main.data_list.PRODUCTS,
-            PRODUCT_CATEGORIES: main.data_list.PRODUCT_CATEGORIES,
-            PRODUCT_LINKED_OPTIONS: main.data_list.PRODUCT_LINKED_OPTIONS,
-            PRODUCT_OPTIONS:    main.data_list.PRODUCT_OPTIONS,
-            PRODUCT_OPTIONS_ITEMS:main.data_list.PRODUCT_OPTIONS_ITEMS,
-            PRODUCT_QUANTITY_TYPES:main.data_list.PRODUCT_QUANTITY_TYPES,
-            OPTION_TYPES: main.data_list.OPTION_TYPES,
-
-            SECTIONS: main.data_list.SECTIONS,
-            SECTION_TYPES: main.data_list.SECTION_TYPES,
-            TABLES: main.data_list.TABLES,
-        },true)
+        invoice.auto_print();
     }
 
     let timers = {order: null, notification: null};
     function start_timers(){
         timers.order = setInterval(function (){
             main.get_order_related_things();
-            app.app_settings.send_main_data({
-                ORDER_PRODUCTS: main.data_list.ORDER_PRODUCTS,
-                ORDER_PRODUCT_OPTIONS:  main.data_list.ORDER_STATUS_TYPES,
-            });
         },settings.ajax_timeouts.NORMAL)
         setTimeout(function () {
             helper.log("start notification timer")
@@ -390,4 +360,8 @@ let main = (function () {
 
     return main;
 })();
+
+$(function () {
+    new main();
+});
 

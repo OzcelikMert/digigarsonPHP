@@ -77,7 +77,7 @@ class account{
     }
 
     private function check_values(db $db, sessions $sessions, echo_values &$echo){
-        if(variable::is_empty(
+        if(user::post(post_keys::STATUS) == 1 && variable::is_empty(
             user::post(post_keys::USER_NAME),
             user::post(post_keys::PASSWORD)
         )){

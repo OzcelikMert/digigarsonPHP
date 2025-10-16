@@ -38,8 +38,6 @@
 <?php
 $v = "?v=".time();
 ?>
-<script>let app = {print_manager:true}; </script>
-<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
 <script src="../../../public/assets/config/settings.js<?=$v?>"></script>
 <script src="../../../matrix_library/js/operations/array_list.js<?=$v?>"></script>

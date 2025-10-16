@@ -1,15 +1,15 @@
-let _index = null;
 helper.logger = true;
 
 $(document).ready(function () {
-  app().then((r) => console.log("app active"));
+  //app().then((r) => );
 });
+
 if (window.module) module = window.module;
 const ipc = require("electron").ipcRenderer;
 
 // let enable_print_manager = (typeof app.print_manager !== "undefined");
 
-app = (function () {
+let app = (function () {
   app.listeners = {
     /* -------- Windows ------------ */
     WINDOW_MIN: "minimize",
@@ -27,8 +27,6 @@ app = (function () {
     /* -------- Settings ------------ */
     GET_CUSTOMIZE_SETTINGS: "getCustomizeSettings",
     SAVE_CUSTOMIZE_SETTINGS: "setCustomizeSettings",
-
-    SEND_MAIN_DATA: "sendMainData",
 
     READ_INTEGRATION_CLA3000: "readIntegrationCLA3000",
     SET_INTEGRATION_CLA3000: "setIntegrationCLA3000",
@@ -54,19 +52,26 @@ app = (function () {
   app.printer = null;
   app.printer_list = null;
   app.customize_settings = null;
+  app.token = "";
 
   //classes
   app.app_settings = null;
   app.printer_settings = null;
   app.integration_cla3000 = null;
 
-  async function app() {
+  function app() {
+    initialize();
+  }
+
+  async function initialize() {
     await theme_window.initialize();
     if (location.pathname !== "/pos/index.php") {
       await app.app_settings.initialize();
       await app.printer_settings.initialize();
     }
+    console.log("app active");
   }
+
   app.printer_settings = {
     get_printers: async function () {
       await ipc.invoke(app.listeners.GET_PRINTERS).then((result) => {
@@ -81,7 +86,6 @@ app = (function () {
         .then(async function (result) {
           app.printer = result;
           await helper.log(app.printer, " app.printer");
-          await main.send_main_data();
           app.ready.printer_settings = true;
           initialize_main();
         });
@@ -174,16 +178,6 @@ app = (function () {
         .invoke(app.listeners.SAVE_CUSTOMIZE_SETTINGS, app.customize_settings)
         .then((result) => {
           helper.log("SET: APP_SETTINGS");
-        });
-    },
-    send_main_data: function (data = {}, new_data = false) {
-      data.new = new_data;
-      console.log("send main data", data);
-      
-      ipc
-        .invoke(app.listeners.SEND_MAIN_DATA, data)
-        .then((result) => {
-          helper.log("send_main_data_list");
         });
     },
     initialize: async function () {
@@ -287,25 +281,28 @@ app = (function () {
   };
 
   app.users = {
-    get_token: function () {
-      ipc.invoke(app.listeners.GET_TOKEN).then((result) => {
-        console.log(result);
-
-        g_token = result;
-        $("#device_token_input").val(g_token);
-        _index = new page_index();
-      });
+    get_token: async function () {
+      let result = await ipc.invoke(app.listeners.GET_TOKEN);
+      console.log(result);
+      app.token = result;
+      return result;
     },
     get_user: function (id) {
       ipc.invoke(app.listeners.GET_USER).then((result) => {
         console.log(result);
-        
       });
     },
     set_user: function (id = 0, isDarkMode = false) {
-      ipc.invoke(app.listeners.GET_TOKEN, {id: 0, isDarkMode: false}).then((result) => {
-        console.log(result);
-      });
+      ipc
+        .invoke(app.listeners.GET_TOKEN, { id: 0, isDarkMode: false })
+        .then((result) => {
+          console.log(result);
+        });
+    },
+    initialize: async function () {
+      let self = this;
+
+      self.get_token();
     },
   };
 
@@ -318,7 +315,11 @@ app = (function () {
   return app;
 })();
 
-if (typeof module === "object") {
+$(function () {
+  let _app = new app();
+});
+
+/*if (typeof module === "object") {
   window.module = module;
   module = undefined;
-}
+}*/

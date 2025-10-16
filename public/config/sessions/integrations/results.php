@@ -8,7 +8,7 @@ class results {
     public string $password;
     public bool $status;
 
-    public function __construct($user_name, $password, $status = true){
+    public function __construct($user_name, $password, $status = false){
         $this->user_name = $user_name;
         $this->password = $password;
         $this->status = $status;
