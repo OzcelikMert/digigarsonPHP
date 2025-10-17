@@ -136,11 +136,11 @@ let orders = (function () {
                 let minute = date_time_diff - hour * 60;
                 time = `${hour >= 10 ? hour : `0${hour}`}:${minute >= 10 ? minute : `0${minute}`}`;
                 if (bg == "") {
-                  if (minute > 20) {
+                  if (minute > 20 && hour < 1) {
                     bg = "busy";
-                  } else if (minute > 40) {
+                  } else if (minute > 30 && hour < 1) {
                     bg = "busy-2";
-                  } else if (minute > 60) {
+                  } else if (minute > 40 || hour > 0) {
                     bg = "busy-3";
                   }
                 }

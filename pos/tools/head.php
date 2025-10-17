@@ -26,5 +26,5 @@
 
 
 <link rel="stylesheet" href="./sameparts/views/keyboard/keyboard.css?v=<?=date("Ymdhis");?>">
-<link rel='stylesheet' href='./../public/assets/styles/theme/theme_dark.css?v=1.0.9'>
+<link rel='stylesheet' href='./../public/assets/styles/theme/theme_dark.css?v=1.1.1'>
 <link rel="stylesheet" href="./../public/assets/styles/root.css?v=1.0.5">
