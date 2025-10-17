@@ -128,8 +128,8 @@ let Safe = (function() {
         return `
             <div class="bottom border-top border-xs">
                 <span class="font-size-xxxs text-center w-100 d-block">
-                    <span>Digigarson</span>'u kullandığınız için teşekkür ederiz. 
-                    <span>www.digigarson.com</span>
+                    <span>MimiPos</span>'u kullandığınız için teşekkür ederiz. 
+                    <span>www.mimipos.com</span>
                 </span>
             </div>
         `;

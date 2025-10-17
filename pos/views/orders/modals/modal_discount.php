@@ -20,7 +20,7 @@
                             <div class="col-6 form-group">
                                 <label><lang>QUANTITY</lang></label>
                                 <input type="number" step="0.01" min="0" name="price" class="form-input" required>
-                                <small class="form-text text-muted"><lang>DISCOUNT_AMOUNT	</lang></small>
+                                <small class="form-text text-muted"><lang>DISCOUNT_AMOUNT</lang></small>
                             </div>
                             <div class="col-6 form-group pt-4">
                                 <div class="btn-group btn-group-toggle" data-toggle="buttons">

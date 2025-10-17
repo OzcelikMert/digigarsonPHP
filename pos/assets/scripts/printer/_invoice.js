@@ -99,6 +99,7 @@ let invoice = (function () {
 
         data.products.forEach(function (item){
             product = array_list.find(main.data_list.PRODUCTS,parseInt(item.product_id),"id")
+            if(product.price < 0) return;
             if (!Array.isArray(product_groups[product.category_id])) product_groups[product.category_id] = Array();
             item.name = product.name;
             item.quantity_id = product.quantity_id;

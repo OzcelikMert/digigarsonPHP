@@ -99,7 +99,6 @@ class products extends helper {
 
         }
 
-
         return $db->db_select(
             $array,
             tbl::TABLE_NAME,

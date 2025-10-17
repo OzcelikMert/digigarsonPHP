@@ -5,7 +5,7 @@
 </style>
 
 <div class="preloader">
-    <img draggable="false" src="../images/theme/logo.webp?V=2" alt="digigarson">
-    <img draggable="false" src="./assets/images/icons/loader-2.svg" alt="digigarson">
+    <img draggable="false" src="../images/theme/logo.webp?V=2" alt="mimi">
+    <img draggable="false" src="./assets/images/icons/loader-2.svg" alt="mimi">
     <h4 class="text-center loader-text e_loader_txt">Sayfa Yükleniyor Lütfen Bekliyiniz...</h4>
 </div>

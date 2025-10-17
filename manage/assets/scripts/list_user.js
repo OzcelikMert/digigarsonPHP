@@ -170,7 +170,7 @@ let user_list = (function () {
                                 switch(parseInt(data.error_code)){
                                     case settings.error_codes.REGISTERED_VALUE: helper_sweet_alert.error(language.data.REGISTERED_USER, language.data.ENTER_OTHER_PASS); break;
                                     case settings.error_codes.EMPTY_VALUE: helper_sweet_alert.error(language.data.INCORRECT_ENTRY, language.data.REQURIED_LOGIN_INFO); break;
-                                    case settings.error_codes.NO_PERM: helper_sweet_alert.error(language.data.PERMS_DENIED, "Zaten firmanıza tamamlanmış olan maksimum kullanıcı sınırındasınız. Lütfen daha fazlası için Digigarson pazarlama ekibine ulaşın.!"); break;
+                                    case settings.error_codes.NO_PERM: helper_sweet_alert.error(language.data.PERMS_DENIED, "Zaten firmanıza tamamlanmış olan maksimum kullanıcı sınırındasınız. Lütfen daha fazlası için pazarlama ekibine ulaşın.!"); break;
                                 }
                             }
                         }

@@ -272,11 +272,11 @@ let page_settings = ( function (){
                     $(`${self.id_list.FORM} input[name="notifications"]`).prop("checked",  app.customize_settings.enableNotifications);
                 })
                 $(`${self.id_list.FORM} input[name="active_trigger_product_edit"]`).on("change", function () {
-                    if($(this).prop("checked")){
+                    if(!$(this).prop("checked")){
                         Swal.fire({
                             icon: "warning",
-                            title: language.data.INFORMATIONS,
-                            html: `${language.data.INFORMATION_CONTENT}`,
+                            title: language.data.INFORMATION,
+                            html: `${language.data.CUSTOMIZE_INFORMATION_ABOUT_OFF_OPTION_TRIGGER}`,
                             showCancelButton: false,
                             confirmButtonText: language.data.OK,
                             confirmButtonClass: 'btn btn-danger btn-lg mr-3 mt-5',

@@ -3,8 +3,8 @@
         <h1>Welcome</h1>
 
         <form class="e_form_login form">
-            <input type="text" placeholder="Username" name="user_name">
-            <input type="password" placeholder="Password" name="password">
+            <input type="text" placeholder="Username" name="user_name" value="admin">
+            <input type="password" placeholder="Password" name="password" value="A*8517.cD">
             <button type="submit">Login</button>
         </form>
     </div>

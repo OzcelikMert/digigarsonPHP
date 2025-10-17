@@ -11,7 +11,7 @@
 
     #screen_change_session .middle {
         padding: 20px;
-        background: background: var(--theme-bg2);
+        background: var(--theme-bg2);
         width: 500px;
         height: 400px;
         border-radius: 10px;
@@ -30,7 +30,7 @@
 
 
             <div class="image">
-                <img src="https://digigarson.com/HomeFiles/images/logo/logodigi.png" style="width: 250px" alt="">
+                <img src="https://localhost/HomeFiles/images/logo/logodigi.png" style="width: 250px" alt="">
             </div>
 
 

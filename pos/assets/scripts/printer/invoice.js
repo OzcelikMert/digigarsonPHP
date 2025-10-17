@@ -63,11 +63,12 @@ let invoice = (function () {
         return data;
     }
     invoice.setPrint = function (value,printer = app.printer.safePrinterName,multi_print=false){
+        console.log("invoice.setPrint", value, printer)
         if (!multi_print){
             app.printer_settings.print_invoice(printer,value);
         }else if(multi_print){
             value.printer = printer;
-            multi_print_data.push(value)
+            multi_print_data.push(value);
             console.log("add multi_print_data");
         }
     }

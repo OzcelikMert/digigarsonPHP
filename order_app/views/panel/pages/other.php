@@ -12,7 +12,7 @@
             <div class="other">
                 <ul>
                     <li><a disabled=""><i class="fa fa-user fa-color"></i><span> <lang>MY_PROFILE</lang> <span class="small"><lang>SOON</lang></span></span><i class="fa fa-chevron-right fa1"></i></a></li>
-                    <li><a><i class="fa fa-id-badge fa-color-2"></i><span><lang>INFORMATION</lang></span><i class="fa fa-chevron-right fa1"></i></a></li>
+                    <li><a><i class="fa fa-id-badge fa-color-2"></i><span><lang>MY_INFORMATION</lang></span><i class="fa fa-chevron-right fa1"></i></a></li>
                     <li open_page="address_list"><a><i class="fa fa-map-marker-alt fa-color-3 "></i> <span><lang>ADDRESSES</lang></span><i class="fa fa-chevron-right fa1"></i></a></li>
                     <li open_page="address_edit"><a><i class="fa fa-map-marker-alt fa-color-3 "></i> <span><lang>ADD_ADDRESS</lang></span><i class="fa fa-chevron-right fa1"></i></a></li>
                     <li open_page="basket"><a ><i class="fa fa-shopping-basket fa-color-7"></i> <span><lang>MY_CART</lang></span><i class="fa fa-chevron-right fa1"></i></a></li>

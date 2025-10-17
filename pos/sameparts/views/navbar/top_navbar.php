@@ -6,7 +6,7 @@
             </li>
         </ul>
 
-        <a class="nav-link size-type-xl pl-0" href="#">Digigarson</a>
+        <a class="nav-link size-type-xl pl-0" href="#">MimiPos</a>
         <button class="e_btn_back_move_table btn btn-danger" style="display:none;"><i class="fa fa-arrow-alt-circle-left" ></i><lang>BACK</lang></button>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

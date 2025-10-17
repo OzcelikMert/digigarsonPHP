@@ -13,7 +13,7 @@
 
 
         <div class="image">
-            <img src="https://digigarson.com/HomeFiles/images/logo/logodigi.png" alt="">
+            <img src="https://localhost/HomeFiles/images/logo/logodigi.png" alt="">
         </div>
 
 

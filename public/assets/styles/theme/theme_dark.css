@@ -1,77 +1,76 @@
-:root{
-    /*Fonts */
-    --font-family : 'Signika', sans-serif;
+:root {
+  /*Fonts */
+  --font-family: "Signika", sans-serif;
 
-    --theme-bg: #333;
-    --theme-bg2: #464646;
-    --theme-bg3: #333;
-    --theme-card: #444;
-    --theme-navbar: #444;
-    --theme-footer: #333;
-    --theme-modal-content: #444;
-    --theme-modal-header: #333;
-    --theme-modal-body: #333;
-    --theme-table-text: white;
-    --theme-table-bg-hover: #555;
-    --theme-border-radius: 5px;
+  --theme-bg: #333;
+  --theme-bg2: #464646;
+  --theme-bg3: #333;
+  --theme-card: #444;
+  --theme-navbar: #444;
+  --theme-footer: #333;
+  --theme-modal-content: #444;
+  --theme-modal-header: #333;
+  --theme-modal-body: #333;
+  --theme-table-text: white;
+  --theme-table-bg-hover: #555;
+  --theme-border-radius: 5px;
 
+  /* COLORS */
+  --color-1: #30b330;
+  --color-2: #f97d35;
+  --color-3: #ff2a2a;
+  --color-4: #007bff;
+  --color-5: #333;
+  --color-6: #ffffff;
+  --color-7: #efeff6;
+  --color-8: #e9ecef;
+  --color-9: #e98407;
+  --color-10: #4e4e4e;
+  --color-11: #04be15;
+  --color-12: #1f1f1f;
+  --color-13: #315071;
 
-    /* COLORS */
-    --color-1: #30b330;
-    --color-2: #f97d35;
-    --color-3: #ff2a2a;
-    --color-4: #007bff;
-    --color-5: #333;
-    --color-6: #ffffff;
-    --color-7: #efeff6;
-    --color-8: #e9ecef;
-    --color-9: #e98407;
-    --color-10: #4e4e4e;
-    --color-11: #04be15;
-    --color-12: #1f1f1f;
-    --color-13: #315071;
+  --text-color: #fff;
+  --a-color: #fff;
+  --h-color: #fff;
 
-    --text-color: #fff;
-    --a-color: #fff;
-    --h-color: #fff;
+  --input-text-color: #fff;
+  --input-bg-color: #3a3a3a;
+  --input-border-color: #696969;
+  --input-outline-border-color: #80bdff;
+  --input-outline-box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
 
-    --input-text-color: #fff;
-    --input-bg-color: #3a3a3a;
-    --input-border-color: #696969;
-    --input-outline-border-color: #80bdff;
-    --input-outline-box-shadow: 0 0 0 0.1rem rgba(0,123,255,.25);
+  /* -- POS APP -- */
+  --order-table-bg: #3e3e3e;
+  --order-table-border: 1px solid #545454;
+  --order-table-radius: 5px;
+  --order-table-line-color: #222;
+  --order-table-line-mt: 19px;
+  --order-table-number-color: #fff;
+  --order-table-section-color: #f97d35;
 
-    /* -- POS APP -- */
-    --order-table-bg: #3e3e3e;
-    --order-table-border: 1px solid #545454;
-    --order-table-radius: 5px;
-    --order-table-line-color: #222;
-    --order-table-line-mt: 19px;
-    --order-table-number-color: #fff;
-    --order-table-section-color: #f97d35;
+  --order-table-reserved-bg: #1f1f1f;
+  --order-table-reserved-number-color: #fff;
+  --order-table-reserved-section-color: #f97d35;
+  --order-table-reserved-info-line-bg: #95dbfc;
+  --order-table-reserved-info-line-color: #222222;
+  --order-table-reserved-line-bg: #24bbff;
+  --order-table-reserved-line-color: #222;
 
-    --order-table-reserved-bg: #1f1f1f;
-    --order-table-reserved-number-color: #fff;
-    --order-table-reserved-section-color: #f97d35;
-    --order-table-reserved-info-line-bg: #95dbfc;
-    --order-table-reserved-info-line-color: #222222;
-    --order-table-reserved-line-bg: #24bbff;
-    --order-table-reserved-line-color: #222;
+  --order-table-fill-bg: #ff2e2e;
+  --order-table-fill-bg-2: #a70000;
+  --order-table-fill-bg-3: #800101;
+  --order-table-fill-bg-4: #4b0000;
+  --order-table-fill-order-unconfirmed-bg: #ff852e;
+  --order-table-fill-order-printed-bg: #ff7272;
+  --order-table-fill-number-color: #fff;
+  --order-table-fill-section-color: #fff;
+  --order-table-fill-info-line-bg: #c8c8c8;
+  --order-table-fill-info-line-color: #222;
+  --order-table-fill-line-bg: #fff;
+  --order-table-fill-line-color: #fff;
+  --order-table-fill-takeaway-bg: #312eff;
+  --order-table-fill-yemek-sepeti-bg: #d4d400;
 
-    --order-table-fill-bg: #ff2e2e;
-    --order-table-fill-order-unconfirmed-bg: #ff852e;
-    --order-table-fill-order-printed-bg: #ff7272;
-    --order-table-fill-number-color: #fff;
-    --order-table-fill-section-color: #fff;
-    --order-table-fill-info-line-bg: #c8c8c8;
-    --order-table-fill-info-line-color: #222;
-    --order-table-fill-line-bg: #fff;
-    --order-table-fill-line-color: #fff;
-    --order-table-fill-takeaway-bg: #312eff;
-    --order-table-fill-yemek-sepeti-bg: #d4d400;
-
-    /* -- MOBILE APP -- */
-
-
+  /* -- MOBILE APP -- */
 }
-

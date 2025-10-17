@@ -248,7 +248,6 @@ class cancel_and_catering {
                 $sessions->get->BRANCH_ID,
                 order_id: user::post(post_keys::ORDER_ID),
                 custom_where: $db->where->equals([
-                    tbl::STATUS => order_products_status_types::ACTIVE,
                     $object
                 ]),
                 limit: [0, 1]

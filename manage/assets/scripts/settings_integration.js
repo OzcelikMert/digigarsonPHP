@@ -75,7 +75,7 @@ let settings_integration = (function () {
       LIST_TYPE: 1,
       search_values: {
         INTEGRATE: "",
-        DIGIGARSON: "",
+        MIMI: "",
       },
     },
     get: function () {
@@ -130,11 +130,11 @@ let settings_integration = (function () {
             if (data.is_delete == 1) return;
             else if (data.is_deleted == 1) return;
 
-          if (self.variable_list.search_values.DIGIGARSON.length > 0) {
+          if (self.variable_list.search_values.MIMI.length > 0) {
             if (
               !String(data.name.toLocaleLowerCase("tr")).match(
                 new RegExp(
-                  self.variable_list.search_values.DIGIGARSON.toLocaleLowerCase(
+                  self.variable_list.search_values.MIMI.toLocaleLowerCase(
                     "tr"
                   ),
                   "gi"
@@ -347,8 +347,8 @@ let settings_integration = (function () {
             case "integrate":
               self.variable_list.search_values.INTEGRATE = element.val();
               break;
-            case "digigarson":
-              self.variable_list.search_values.DIGIGARSON = element.val();
+            case "mimi":
+              self.variable_list.search_values.MIMI = element.val();
               break;
           }
 

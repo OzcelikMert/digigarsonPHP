@@ -1,4 +1,5 @@
 <?php
+
 namespace pos\functions\orders\set;
 
 use config\db;
@@ -29,7 +30,8 @@ use sameparts\php\helper\date;
 use sameparts\php\printer\printer_values;
 use config\type_tables_values\print_types;
 
-class post_keys_insert {
+class post_keys_insert
+{
     const PRODUCTS = "products",
         TABLE_ID = "table_id",
         ORDER_ID = "order_id",
@@ -50,10 +52,10 @@ class post_keys_insert {
         INTEGRATE_ORDER_ID = "integrate_order_id",
         INTEGRATE_CUSTOMER_ID = "integrate_customer_id",
         ACCOUNT_TYPE = "account_type";
-
 }
 
-class products_keys {
+class products_keys
+{
     const ID = "id",
         QUANTITY = "quantity",
         PRICE = "price",
@@ -65,7 +67,8 @@ class products_keys {
         TYPE = "type";
 }
 
-class options_keys {
+class options_keys
+{
     const ID = "id",
         OPTION_ID = "option_id",
         OPTION_ITEM_ID = "option_item_id",
@@ -76,36 +79,38 @@ class options_keys {
 }
 
 
-class insert {
+class insert
+{
     private printer_values $invoice;
 
-    public function __construct(db $db, sessions $sessions, echo_values &$echo) {
-        user::post(post_keys_insert::NO,0);
+    public function __construct(db $db, sessions $sessions, echo_values &$echo)
+    {
+        user::post(post_keys_insert::NO, 0);
         $this->check_values($db, $sessions, $echo);
-        if($echo->status){
-            if(user::post(post_keys_insert::CUSTOMER_ID) > 0){
+        if ($echo->status) {
+            if (user::post(post_keys_insert::CUSTOMER_ID) > 0) {
                 user::post(post_keys_insert::ACCOUNT_TYPE, account_types::CUSTOMER);
-
-            }else{
+            } else {
                 user::post(post_keys_insert::ACCOUNT_TYPE, account_types::WAITER);
                 user::post(post_keys_insert::CUSTOMER_ID, $sessions->get->USER_ID);
             }
 
-            if(user::post(post_keys_insert::ORDER_ID) == 0){
+            if (user::post(post_keys_insert::ORDER_ID) == 0) {
                 user::post(post_keys_insert::ORDER_ID, $this->add_order($db, $sessions)->insert_id);
-            }else{
+            } else {
                 $this->update_order($db, $sessions);
             }
 
-            if(user::post(post_keys_insert::ORDER_ID_INTEGRATE) > 0) {
-                switch ((int)user::post(post_keys_insert::TYPE_INTEGRATE)){
+            if (user::post(post_keys_insert::ORDER_ID_INTEGRATE) > 0) {
+                switch ((int)user::post(post_keys_insert::TYPE_INTEGRATE)) {
                     case integrate_types::YEMEK_SEPETI:
                         user::post(post_keys_insert::ACCOUNT_TYPE, account_types::YEMEK_SEPETI);
                         break;
                 }
 
-                $integrate_customer = integrate::get_customers($db, user::post(post_keys_insert::TYPE_INTEGRATE),custom_where: $db->where->equals([tbl19::ID_INTEGRATE => user::post(post_keys_insert::CUSTOMER_ID_INTEGRATE)]))->rows;
-                user::post(post_keys_insert::INTEGRATE_CUSTOMER_ID,
+                $integrate_customer = integrate::get_customers($db, user::post(post_keys_insert::TYPE_INTEGRATE), custom_where: $db->where->equals([tbl19::ID_INTEGRATE => user::post(post_keys_insert::CUSTOMER_ID_INTEGRATE)]))->rows;
+                user::post(
+                    post_keys_insert::INTEGRATE_CUSTOMER_ID,
                     ((count($integrate_customer) > 0)
                         ? $integrate_customer[0]["id"]
                         : $this->add_integrate_customer($db, $sessions)->insert_id)
@@ -115,17 +120,20 @@ class insert {
                 $echo->custom_data["payment"] = (array)$this->add_integrate_order_payment($db, $sessions);
             }
 
-            $this->invoice = new printer_values(
-                db: $db,
-                sessions: $sessions,
-                table_id: user::post(post_keys_insert::TABLE_ID),
-                order_id: user::post(post_keys_insert::ORDER_ID),
-                order_no:  (user::post(post_keys_insert::NO) > 0) ? user::post(post_keys_insert::NO) : $this->get_order_no($db,$sessions,$echo),
-                print_type: print_types::KITCHEN,
-            );
-            $this->add_order_products($db, $sessions);
-            $this->invoice->create(); //create printer json and insert mysql
-            if(user::post(post_keys_insert::CALLER_ID) > 0){
+            $invoice_products = $this->add_order_products($db, $sessions);
+            if (count($invoice_products) > 0) {
+                $this->invoice = new printer_values(
+                    db: $db,
+                    sessions: $sessions,
+                    table_id: user::post(post_keys_insert::TABLE_ID),
+                    order_id: user::post(post_keys_insert::ORDER_ID),
+                    order_no: (user::post(post_keys_insert::NO) > 0) ? user::post(post_keys_insert::NO) : $this->get_order_no($db, $sessions, $echo),
+                    print_type: print_types::KITCHEN,
+                );
+                $this->invoice->products = $invoice_products;
+                $this->invoice->create(); //create printer json and insert mysql
+            }
+            if (user::post(post_keys_insert::CALLER_ID) > 0) {
                 $this->update_caller_status($db, $sessions);
             }
         }
@@ -133,20 +141,22 @@ class insert {
     }
 
     /* Functions */
-    private function update_order(db $db, sessions $sessions) : void{
+    private function update_order(db $db, sessions $sessions): void
+    {
         $db->db_update(
             tbl10::TABLE_NAME,
             array(
                 tbl10::IS_PRINT => 0
             ),
             where: $db->where->equals([
-            tbl10::BRANCH_ID => $sessions->get->BRANCH_ID,
-            tbl10::ID => user::post(post_keys_insert::ORDER_ID)
-        ])
+                tbl10::BRANCH_ID => $sessions->get->BRANCH_ID,
+                tbl10::ID => user::post(post_keys_insert::ORDER_ID)
+            ])
         );
     }
 
-    private function add_order(db $db, sessions $sessions) : results{
+    private function add_order(db $db, sessions $sessions): results
+    {
         user::post(post_keys_insert::NO, orders::get_order_last_no($db, $sessions->get->BRANCH_ID));
 
         return $db->db_insert(
@@ -165,14 +175,14 @@ class insert {
         );
     }
 
-    private function add_order_products(db $db, sessions $sessions){
+    private function add_order_products(db $db, sessions $sessions)
+    {
         $time = date::get(date::date_type_simples()::HOUR_MINUTE);
         $total_price = 0;
         $index = -1;
-        $this->invoice->products = array();
-        foreach (user::post(post_keys_insert::PRODUCTS) as $value){
+        $invoice_products = array();
+        foreach (user::post(post_keys_insert::PRODUCTS) as $value) {
             $index++;
-            $this->invoice->products[$index] = array();
             $total_price += (float)$value[products_keys::PRICE];
 
             $insert_id = $db->db_insert(
@@ -188,14 +198,20 @@ class insert {
                     tbl12::VAT           => $value[products_keys::VAT],
                     tbl12::QUANTITY      => $value[products_keys::QUANTITY],
                     tbl12::QTY           => $value[products_keys::QTY],
-                    tbl12::PRINT         => 0,
+                    tbl12::PRINT         => $value[products_keys::TYPE] == order_product_types::DISCOUNT ? 1 : 0,
                     tbl12::TIME          => $time,
                     tbl12::COMMENT       => $value[products_keys::COMMENT],
                     tbl12::TYPE          => $value[products_keys::TYPE]
                 )
             )->insert_id;
 
-            $this->invoice->products[$index] = array(
+            if ($value[products_keys::TYPE] == order_product_types::DISCOUNT) {
+                continue;
+            }
+
+            $invoice_products[$index] = array();
+
+            $invoice_products[$index] = array(
                 "product_id"    => (int)$value[products_keys::ID],
                 "order_id"      => (int)user::post(post_keys_insert::ORDER_ID),
                 "price"         => (float)$value[products_keys::PRICE],
@@ -204,9 +220,9 @@ class insert {
                 "comment"       => $value[products_keys::COMMENT],
             );
 
-            $this->invoice->products[$index]["options"] = array();
+            $invoice_products[$index]["options"] = array();
 
-            if(isset($value[products_keys::OPTIONS]) && count($value[products_keys::OPTIONS]) > 0){
+            if (isset($value[products_keys::OPTIONS]) && count($value[products_keys::OPTIONS]) > 0) {
                 $insert_data = array();
                 foreach ($value[products_keys::OPTIONS] as $option) {
                     array_push(
@@ -222,7 +238,7 @@ class insert {
                     );
 
                     array_push(
-                        $this->invoice->products[$index]["options"],
+                        $invoice_products[$index]["options"],
                         array(
                             "option_id"      => (int)$option[options_keys::OPTION_ID],
                             "option_item_id" => (int)$option[options_keys::OPTION_ITEM_ID],
@@ -236,10 +252,11 @@ class insert {
                 continue;
             }
         }
-        user::post(post_keys_insert::TOTAL_PRICE, $total_price);
+        return $invoice_products;
     }
 
-    private function update_caller_status(db $db, sessions $sessions) : results{
+    private function update_caller_status(db $db, sessions $sessions): results
+    {
         return $db->db_update(
             tbl16::TABLE_NAME,
             array(
@@ -252,7 +269,8 @@ class insert {
         );
     }
 
-    private function add_integrate_order(db $db, sessions $sessions) : results{
+    private function add_integrate_order(db $db, sessions $sessions): results
+    {
         return $db->db_insert(
             tbl17::TABLE_NAME,
             array(
@@ -266,7 +284,8 @@ class insert {
         );
     }
 
-    private function add_integrate_order_payment(db $db, sessions $sessions) : results{
+    private function add_integrate_order_payment(db $db, sessions $sessions): results
+    {
         return $db->db_insert(
             tbl18::TABLE_NAME,
             array(
@@ -278,7 +297,8 @@ class insert {
         );
     }
 
-    private function add_integrate_customer(db $db, sessions $sessions) : results{
+    private function add_integrate_customer(db $db, sessions $sessions): results
+    {
         return $db->db_insert(
             tbl19::TABLE_NAME,
             array(
@@ -289,42 +309,46 @@ class insert {
         );
     }
 
-    private function get_order_no(db $db,sessions $sessions,echo_values $echo){
-        $values = $db->db_select(tbl10::NO,tbl10::TABLE_NAME,where: $db->where->equals([
+    private function get_order_no(db $db, sessions $sessions, echo_values $echo)
+    {
+        $values = $db->db_select(tbl10::NO, tbl10::TABLE_NAME, where: $db->where->equals([
             tbl10::BRANCH_ID => $sessions->get->BRANCH_ID,
             tbl10::ID => user::post(post_keys_insert::ORDER_ID)
         ]));
         return $values->rows[0]["no"];
     }
 
-    private function check_values(db $db, sessions $sessions, echo_values &$echo){
-        if(variable::is_empty(
+    private function check_values(db $db, sessions $sessions, echo_values &$echo)
+    {
+        if (variable::is_empty(
             user::post(post_keys_insert::PRODUCTS),
             user::post(post_keys_insert::ORDER_ID),
             user::post(post_keys_insert::TABLE_ID),
             user::post(post_keys_insert::DISCOUNT),
             user::post(post_keys_insert::STATUS),
             user::post(post_keys_insert::TYPE)
-        )){
+        )) {
             $echo->error_code = settings::error_codes()::EMPTY_VALUE;
         }
 
-        if($echo->error_code == settings::error_codes()::SUCCESS){
+        if ($echo->error_code == settings::error_codes()::SUCCESS) {
             $id = array();
-            foreach (user::post(post_keys_insert::PRODUCTS) as $value){
-                if($value[products_keys::TYPE] == order_product_types::DISCOUNT) continue;
-                if(array_list::index_of($id, $value[products_keys::ID]) < 0) array_push($id, $value[products_keys::ID]);
+            foreach (user::post(post_keys_insert::PRODUCTS) as $value) {
+                if ($value[products_keys::TYPE] == order_product_types::DISCOUNT) continue;
+                if (array_list::index_of($id, $value[products_keys::ID]) < 0) array_push($id, $value[products_keys::ID]);
             }
-            if(count(products::get(
+
+            if (count($id) > 0) {
+                if (count(products::get(
                     $db,
                     $sessions->get->LANGUAGE_TAG,
                     $sessions->get->BRANCH_ID,
                     custom_where: $db->where->equals([tbl13::ID => $id]),
                     limit: [0, count($id)]
                 )->rows) != count($id)) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
+            }
         }
 
-        if($echo->error_code != settings::error_codes()::SUCCESS) $echo->status = false;
+        if ($echo->error_code != settings::error_codes()::SUCCESS) $echo->status = false;
     }
-
 }

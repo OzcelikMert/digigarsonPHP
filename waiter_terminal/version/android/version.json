@@ -1,6 +1,6 @@
 {
   "app": 1,
   "name": "1.0.0",
-  "db_digigarson": 1,
+  "db_pos": 1,
   "inherit": true
 }

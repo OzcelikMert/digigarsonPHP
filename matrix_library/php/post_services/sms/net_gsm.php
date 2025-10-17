@@ -7,9 +7,9 @@ class net_gsm{
         try {
             $client = new SoapClient("http://soap.netgsm.com.tr:8080/Sms_webservis/SMS?wsdl");
             $Result = $client -> smsGonder1NV2(array(
-                'username'=>'8503045590',
-                'password' => 'Q1W2E3R4',
-                'header' => 'DIGIGARSON',
+                'username'=>'',
+                'password' => '',
+                'header' => 'Mimi',
                 'msg' => $message,
                 'gsm' => $phone,
                 'filter' => '',

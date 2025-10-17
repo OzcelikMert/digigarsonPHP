@@ -945,7 +945,7 @@ let report_product = (function () {
                     let date_start = $(`input[name="date_start"]`).val();
                     let date_end = $(`input[name="date_end"]`).val();
                     let report_name = $(`${report_form.id_list.FORM} button[value="${self.variable_list.TYPE}"]`).html();
-                    let file_name = `Digigarson ${report_name} ${date_start}-${date_end}`;
+                    let file_name = `MimiPos ${report_name} ${date_start}-${date_end}`;
 
                     let values = {
                         "tables": Array(),

@@ -256,8 +256,8 @@ let SafeReport =  (function() {
         return `
             <div class="bottom border-top border-xs">
                 <span class="font-size-xxs text-center w-100 d-block">
-                    <span class="bold">Digigarson</span>'u kullandığınız için teşekkür ederiz. 
-                    <span class="bold">www.digigarson.com</span>
+                    <span class="bold">MimiPos</span>'u kullandığınız için teşekkür ederiz. 
+                    <span class="bold">www.mimipos.com</span>
                 </span>
             </div>
         `;

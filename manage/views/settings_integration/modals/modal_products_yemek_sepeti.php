@@ -30,8 +30,8 @@
 
                         </div>
                         <div class="col-md-6">
-                            <h4>Digigarson</h4>
-                            <input type="text" function="digigarson" class="e_search_product form-input mb-1" placeholder="Arama">
+                            <h4>MimiPos</h4>
+                            <input type="text" function="mimi" class="e_search_product form-input mb-1" placeholder="Arama">
                             <div class="products-table-div">
                                 <table class="e_products_table table table-striped table-sticky bg-theme-2 br text-left">
                                     <tr>

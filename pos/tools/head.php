@@ -12,8 +12,8 @@
 <link rel="stylesheet" href="./../public/assets/plugins/Bootstrap/styles/bootstrap.min.css">
 
 <!-- Popup -->
-<link rel="stylesheet" href="./../public/assets/plugins/SweetAlert/styles/sweetalert2.css?v?1.0.3">
-<link rel="stylesheet" href="./../public/assets/plugins/SweetAlert/styles/sweetalert2.dark.min.css?v?1.0.3">
+<link rel="stylesheet" href="./../public/assets/plugins/SweetAlert/styles/sweetalert2.css?v=1.0.4">
+<link rel="stylesheet" href="./../public/assets/plugins/SweetAlert/styles/sweetalert2.dark.min.css?v=1.0.3">
 
 <link rel="stylesheet" href="./../public/assets/plugins/JQuery/styles/jquery-confirm.css">
 
@@ -26,5 +26,5 @@
 
 
 <link rel="stylesheet" href="./sameparts/views/keyboard/keyboard.css?v=<?=date("Ymdhis");?>">
-<link rel='stylesheet' href='./../public/assets/styles/theme/theme_dark.css?v=1.0.8'>
+<link rel='stylesheet' href='./../public/assets/styles/theme/theme_dark.css?v=1.0.9'>
 <link rel="stylesheet" href="./../public/assets/styles/root.css?v=1.0.5">

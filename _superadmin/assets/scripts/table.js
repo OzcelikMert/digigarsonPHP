@@ -83,7 +83,7 @@ let table_edit = (function () {
                         console.log(val);
                         elements +=`
                             <li>
-                                <span>${val.section_name} ${val.no},https://digigarson.net/order_app/panel.php?url=${val.url}</span>
+                                <span>${val.section_name} ${val.no},https://localhost/order_app/panel.php?url=${val.url}</span>
                             </li>`;
 
                         if(i == 10){

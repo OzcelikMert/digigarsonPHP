@@ -20,12 +20,14 @@ let index = (function () {
   let searchingData = [];
   let currentSortType = 1; // 0: ASC, 1: DESC
   let currentSortKey = "const_name";
+  let currentSearchingText = "";
+  let isEditing = false;
 
   function index() {
     initialize();
   }
 
-  function create_element(languages) {
+  function create_element(languages = []) {
     let element = ``;
 
     languages.forEach((language) => {
@@ -69,6 +71,22 @@ let index = (function () {
     });
   }
 
+  function search(searchText) {
+    if (searchText.length > 2) {
+      searchingData = languagesData.filter((languageData) => {
+        return Object.values(languageData).some(
+          (value) =>
+            typeof value === "string" &&
+            value.toLowerCase().includes(searchText)
+        );
+      });
+      create_element(searchingData);
+    } else {
+      searchingData = [];
+      create_element(languagesData);
+    }
+  }
+
   function get(get_type = get_types.LANGUAGES) {
     $.ajax({
       url: "./functions/index/get.php",
@@ -80,7 +98,11 @@ let index = (function () {
         languagesData = data.rows;
         if (languagesData.length > 0) {
           sort();
-          create_element(languagesData);
+          if(searchingData.length > 0){
+            search(currentSearchingText);
+          }else {
+            create_element(languagesData);
+          }
         }
       },
     });
@@ -113,7 +135,9 @@ let index = (function () {
           data = JSON.parse(data);
           if (data.error_code === settings.error_codes.SUCCESS) {
             helper_sweet_alert.success("Success", "Save successfully");
-            $(class_list.LANGUAGE_FORM).trigger("reset");
+            if(!isEditing){
+              $(class_list.LANGUAGE_FORM).trigger("reset");
+            }
             get();
           }
         });
@@ -139,21 +163,10 @@ let index = (function () {
 
       $(document).on("keyup", `input[name=search]`, function () {
         let element = $(this);
-        let search = element.val().toLowerCase();
-        console.log(search);
-        if (search.length > 2) {
-          searchingData = languagesData.filter((languageData) => {
-            return Object.values(languageData).some(
-              (value) =>
-                typeof value === "string" &&
-                value.toLowerCase().includes(search)
-            );
-          });
-          create_element(searchingData);
-        } else {
-          searchingData = [];
-          create_element(languagesData);
-        }
+        let searchText = element.val().toLowerCase();
+        currentSearchingText = searchText;
+        console.log(searchText);
+        search(searchText);
       });
 
       $(document).on("click", `button`, function () {
@@ -196,6 +209,7 @@ let index = (function () {
             });
             break;
           case "edit":
+            isEditing = true;
             $(class_list.CANCEL_BUTTON).show();
             $(class_list.LANGUAGE_FORM).autofill({
               key: key.toString().toLowerCase(),
@@ -251,6 +265,7 @@ let index = (function () {
             SELECTED_LANGUAGE_ID = id;
             break;
           case "cancel":
+            isEditing = false;
             $(class_list.CANCEL_BUTTON).hide();
             $(class_list.LANGUAGE_FORM)[0].reset();
             SELECTED_LANGUAGE_ID = 0;

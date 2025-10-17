@@ -4,7 +4,7 @@
         <div class="col-md-12 m-0 p-0 login-bg">
             <div class="form shadow">
               <div class="title">
-                 DIGIGARSON
+                 Mimi
               </div>
 
                 <form id="login_form">

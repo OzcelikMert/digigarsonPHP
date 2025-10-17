@@ -3,7 +3,7 @@
         <ul class="navbar-nav navbar-left-top">
             <li class="nav-item dropdown connection">
                 <a class="nav-link size-type-xl pl-3" href="dashboard.php">
-                    <img width="200" src="https://digigarson.com/HomeFiles/images/logo/logodigi.png" alt="Digigarson">
+                    <img width="200" src="https://localhost/HomeFiles/images/logo/mimi.png" alt="Mimi">
                 </a>
             </li>
         </ul>

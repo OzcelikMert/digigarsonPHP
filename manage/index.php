@@ -10,7 +10,7 @@ class index extends creator {
 
     public function __construct() {
         $this->v = "?v=".date("YmdHis");
-        $this->page_title = "Digigarson Yönetim Paneli";
+        $this->page_title = "Yönetim Paneli";
         parent::__construct();
     }
     protected function main(): void {
