@@ -1,4 +1,5 @@
 <?php
+
 namespace pos\functions\orders\set;
 
 use config\db;
@@ -22,7 +23,8 @@ use sameparts\php\db_query\branch_trust_accounts;
 use sameparts\php\db_query\orders;
 use sameparts\php\helper\date;
 
-class post_keys_payment {
+class post_keys_payment
+{
     const ORDERS = "orders",
         PRODUCTS = "products_normal_payment",
         PAYMENT_TYPE = "payment_type",
@@ -32,47 +34,58 @@ class post_keys_payment {
         SET_TYPE = "set_type";
 }
 
-class set_types {
+class set_types
+{
     const PAYMENT_TRUST_ACCOUNT = 0x0008;
 }
 
-class orders_keys {
+class orders_keys
+{
     const ID = "id",
         PRICE = "price",
         COMMENT = "comment";
 }
 
-class products_keys_payment {
+class products_keys_payment
+{
     const ID = "id";
 }
 
-class payment {
-    public function __construct(db $db, sessions $sessions, echo_values &$echo) {
-        if((int)user::post(post_keys_payment::ORDER_TYPE) == order_types::SAFE){
+class payment
+{
+    public function __construct(db $db, sessions $sessions, echo_values &$echo)
+    {
+        if ((int)user::post(post_keys_payment::ORDER_TYPE) == order_types::SAFE) {
             (new insert($db, $sessions, $echo));
+            if ($echo->status == false) {
+                return;
+            }
             user::post(post_keys_payment::ORDERS, array(
                 array(
                     orders_keys::ID    => (int)user::post(post_keys_insert::ORDER_ID),
                     orders_keys::PRICE => user::post(post_keys_insert::TOTAL_PRICE)
                 )
             ));
-        }else{
-            $this->check_values($db, $sessions, $echo);
         }
 
-        if($echo->status){
+        $this->check_values($db, $sessions, $echo);
+
+        if ($echo->status) {
             $echo->custom_data["set"] = (array)$this->set($db, $sessions, $echo);
         }
+
+        $echo->custom_data["POST"] = $_POST;
     }
 
     /* Functions */
-    private function set(db $db, sessions $sessions, echo_values &$echo){
+    private function set(db $db, sessions $sessions, echo_values &$echo)
+    {
         $trust_account = array();
         $id = array();
         $time = date::get();
         $time_2 = $time;
 
-        if(user::post(post_keys_payment::TRUST_ACCOUNT_ID) > 0){
+        if (user::post(post_keys_payment::TRUST_ACCOUNT_ID) > 0) {
             $trust_account = branch_trust_accounts::get(
                 $db,
                 $sessions->get->BRANCH_ID,
@@ -81,16 +94,16 @@ class payment {
             )->rows[0];
         }
 
-        foreach (user::post(post_keys_payment::ORDERS) as $value){
+        foreach (user::post(post_keys_payment::ORDERS) as $value) {
             $old_order_id = $value[orders_keys::ID];
-            if(user::post(post_keys_payment::PRODUCTS)){
+            if (user::post(post_keys_payment::PRODUCTS)) {
                 $rows = orders::get(
                     $db,
                     $sessions->get->BRANCH_ID,
                     $value[orders_keys::ID]
                 )->rows;
 
-                foreach ($rows as $row){
+                foreach ($rows as $row) {
                     $value[orders_keys::ID] = $db->db_insert(
                         tbl::TABLE_NAME,
                         array(
@@ -108,8 +121,8 @@ class payment {
                 }
 
                 $id_product = array();
-                foreach (user::post(post_keys_payment::PRODUCTS) as $product){
-                    if(array_list::index_of($id_product, $product[products_keys_payment::ID]) < 0) array_push($id_product, $product[products_keys_payment::ID]);
+                foreach (user::post(post_keys_payment::PRODUCTS) as $product) {
+                    if (array_list::index_of($id_product, $product[products_keys_payment::ID]) < 0) array_push($id_product, $product[products_keys_payment::ID]);
                 }
                 $db->db_update(
                     tbl3::TABLE_NAME,
@@ -120,12 +133,12 @@ class payment {
                     where: $db->where->equals([tbl3::ID => $id_product])
                 );
 
-                if(count(orders::get_products(
-                        $db,
-                        $sessions->get->LANGUAGE_TAG,
-                        $sessions->get->BRANCH_ID,
-                        order_id: $old_order_id
-                    )->rows) < 1)
+                if (count(orders::get_products(
+                    $db,
+                    $sessions->get->LANGUAGE_TAG,
+                    $sessions->get->BRANCH_ID,
+                    order_id: $old_order_id
+                )->rows) < 1)
                     $db->db_delete(
                         tbl::TABLE_NAME,
                         where: $db->where->equals([
@@ -133,7 +146,7 @@ class payment {
                             tbl::ID => $old_order_id
                         ])
                     );
-            }else{
+            } else {
                 $db->db_update(
                     tbl3::TABLE_NAME,
                     array(
@@ -146,7 +159,7 @@ class payment {
                 );
             }
 
-            if(user::post(post_keys_payment::SET_TYPE) != set_types::PAYMENT_TRUST_ACCOUNT) {
+            if (user::post(post_keys_payment::SET_TYPE) != set_types::PAYMENT_TRUST_ACCOUNT) {
                 $total_money = (float)$db->db_select(
                     $db->as_name($db->sum(tbl3::PRICE), "total"),
                     tbl3::TABLE_NAME,
@@ -168,7 +181,7 @@ class payment {
 
                 $value[orders_keys::PRICE] = (number_format($total_money, 2) < number_format($value[orders_keys::PRICE], 2)) ? $total_money : $value[orders_keys::PRICE];
 
-                if(number_format($total_money, 2) != number_format($value[orders_keys::PRICE], 2)){
+                if (number_format($total_money, 2) != number_format($value[orders_keys::PRICE], 2)) {
                     $time = "";
                 }
             }
@@ -191,7 +204,7 @@ class payment {
                 )
             )->insert_id;
 
-            if(user::post(post_keys_payment::TRUST_ACCOUNT_ID) > 0){
+            if (user::post(post_keys_payment::TRUST_ACCOUNT_ID) > 0) {
                 $db->db_insert(
                     tbl4::TABLE_NAME,
                     array(
@@ -205,67 +218,70 @@ class payment {
             }
         }
 
-        if(user::post(post_keys_payment::SET_TYPE) != set_types::PAYMENT_TRUST_ACCOUNT)
+        if (user::post(post_keys_payment::SET_TYPE) != set_types::PAYMENT_TRUST_ACCOUNT)
             return $db->db_update(
-            tbl::TABLE_NAME,
-            array(
-                tbl::STATUS   => order_status_types::DELIVERED,
-                tbl::DATE_END => $time
-            ),
-            where: $db->where->equals([
-                tbl::BRANCH_ID => $sessions->get->BRANCH_ID,
-                tbl::ID => $id
-            ])
-        );
+                tbl::TABLE_NAME,
+                array(
+                    tbl::STATUS   => order_status_types::DELIVERED,
+                    tbl::DATE_END => $time
+                ),
+                where: $db->where->equals([
+                    tbl::BRANCH_ID => $sessions->get->BRANCH_ID,
+                    tbl::ID => $id
+                ])
+            );
     }
 
-    private function check_values(db $db, sessions $sessions, echo_values &$echo){
-        if(variable::is_empty(
+    private function check_values(db $db, sessions $sessions, echo_values &$echo)
+    {
+        if (variable::is_empty(
             user::post(post_keys_payment::ORDERS),
             user::post(post_keys_payment::ORDER_TYPE),
             user::post(post_keys_payment::PAYMENT_TYPE),
             user::post(post_keys_payment::TABLE_ID)
-        )){
+        )) {
             $echo->error_code = settings::error_codes()::EMPTY_VALUE;
         }
 
-        if($echo->error_code == settings::error_codes()::SUCCESS && user::post(post_keys_payment::SET_TYPE) != set_types::PAYMENT_TRUST_ACCOUNT){
+
+        if ($echo->error_code == settings::error_codes()::SUCCESS && user::post(post_keys_payment::SET_TYPE) != set_types::PAYMENT_TRUST_ACCOUNT) {
             $id = array();
-            foreach (user::post(post_keys_payment::ORDERS) as $value){
-                if(array_list::index_of($id, $value[orders_keys::ID]) < 0) array_push($id, $value[orders_keys::ID]);
+            foreach (user::post(post_keys_payment::ORDERS) as $value) {
+                if (array_list::index_of($id, $value[orders_keys::ID]) < 0) array_push($id, $value[orders_keys::ID]);
             }
-            if(count(orders::get(
-                    $db,
-                    $sessions->get->BRANCH_ID,
-                    table_id: user::post(post_keys_payment::TABLE_ID),
-                    custom_where: $db->where->equals([tbl::ID => $id]),
-                    limit: [0, count($id)]
-                )->rows) != count($id)) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
+            if (count(orders::get(
+                $db,
+                $sessions->get->BRANCH_ID,
+                table_id: user::post(post_keys_payment::TABLE_ID),
+                custom_where: $db->where->equals([tbl::ID => $id]),
+                limit: [0, count($id)]
+            )->rows) != count($id)) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
         }
 
-        if($echo->error_code == settings::error_codes()::SUCCESS && user::post(post_keys_payment::PRODUCTS)){
+        if ($echo->error_code == settings::error_codes()::SUCCESS && user::post(post_keys_payment::PRODUCTS)) {
             $id = array();
-            foreach (user::post(post_keys_payment::PRODUCTS) as $value){
-                if(array_list::index_of($id, $value[products_keys_payment::ID]) < 0) array_push($id, $value[products_keys_payment::ID]);
+            foreach (user::post(post_keys_payment::PRODUCTS) as $value) {
+                if (array_list::index_of($id, $value[products_keys_payment::ID]) < 0) array_push($id, $value[products_keys_payment::ID]);
             }
-            if(count(orders::get_products(
-                    $db,
-                    $sessions->get->LANGUAGE_TAG,
-                    $sessions->get->BRANCH_ID,
-                    custom_where: $db->where->equals([tbl3::ID => $id]),
-                    limit: [0, count($id)]
-                )->rows) != count($id)) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
+            if (count(orders::get_products(
+                $db,
+                $sessions->get->LANGUAGE_TAG,
+                $sessions->get->BRANCH_ID,
+                custom_where: $db->where->equals([tbl3::ID => $id]),
+                limit: [0, count($id)]
+            )->rows) != count($id)) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
         }
 
-        if($echo->error_code == settings::error_codes()::SUCCESS && user::post(post_keys_payment::TRUST_ACCOUNT_ID) > 0){
-            if(count(branch_trust_accounts::get(
-                    $db,
-                    $sessions->get->BRANCH_ID,
-                    user::post(post_keys_payment::TRUST_ACCOUNT_ID),
-                    limit: [0, 1]
-                )->rows) < 1) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
+        if ($echo->error_code == settings::error_codes()::SUCCESS && user::post(post_keys_payment::TRUST_ACCOUNT_ID) > 0) {
+            if (count(branch_trust_accounts::get(
+                $db,
+                $sessions->get->BRANCH_ID,
+                user::post(post_keys_payment::TRUST_ACCOUNT_ID),
+                limit: [0, 1]
+            )->rows) < 1) $echo->error_code = settings::error_codes()::INCORRECT_DATA;
         }
 
-        if($echo->error_code != settings::error_codes()::SUCCESS) $echo->status = false;
+
+        if ($echo->error_code != settings::error_codes()::SUCCESS) $echo->status = false;
     }
 }

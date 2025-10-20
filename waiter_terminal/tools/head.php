@@ -12,6 +12,8 @@
 <link rel="stylesheet" href="../public/assets/plugins/SweetAlert/styles/sweetalert2.css">
 <link rel="stylesheet" href="../public/assets/plugins/Animate/animate.min.css">
 
+<link rel='stylesheet' href='./../public/assets/styles/theme/theme_dark.css?v=1.1.1'>
+
 <link rel="stylesheet" href="./assets/styles/header.css?v=<?=$v;?>" />
 
 <link rel="stylesheet" href="./assets/styles/main.css?v=<?=$v;?>" />

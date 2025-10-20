@@ -122,6 +122,8 @@ let main = (function () {
             data: {page_name: page_name, get_type: get_type},
             async: async,
             success: function (data) {
+                console.log(data);
+                
                 data = JSON.parse(data);
                 console.log(data);
                 set_data_list(data, main.set_type_for_data_list.CATERING_RELATED_THINGS)
@@ -188,16 +190,16 @@ let main = (function () {
         main.get_order_related_things();
         main.get_catering_related_things();
         main.get_payments_related_things();
-        let application_table_sections = JSON.parse(application.db.table_sections.get());
+        /*let application_table_sections = JSON.parse(application.db.table_sections.get());
         application_table_sections.forEach(sections => {
             main.data_list.APP_TABLE_SECTIONS.push(sections.section_id);
-        });
+        });*/
         console.log("TABLE SECTIONS", main.data_list.APP_TABLE_SECTIONS);
         get_order_timer();
     }
     let order_timer = null;
     function get_order_timer(){
-        order_timer = setInterval(function (){main.get_order_related_things();},settings.ajax_timeouts.NORMAL)
+        order_timer = setInterval(function (){ main.get_order_related_things();},settings.ajax_timeouts.NORMAL)
     }
 
     return main;

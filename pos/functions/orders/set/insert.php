@@ -252,6 +252,9 @@ class insert
                 continue;
             }
         }
+
+        user::post(post_keys_insert::TOTAL_PRICE, $total_price);
+
         return $invoice_products;
     }
 

@@ -1,8 +1,8 @@
 <?php
-namespace manage\functions\list_device\get;
+namespace waiter_terminal\functions\get;
 
 use config\db;
-use manage\sameparts\functions\sessions\get;
+use waiter_terminal\sameparts\functions\sessions\get;
 use sameparts\php\ajax\echo_values;
 use config\table_helper\device_types as tbl;
 

@@ -226,7 +226,7 @@ let invoice = (function () {
                                         invoice.print_invoce_type.PAYMENT_RECEIPT,
                                         item.data.table_id,
                                         item.data.order_id
-                                    )
+                                    );
                                     break;
                                 case invoice.print_invoce_type.KITCHEN:
                                 case invoice.print_invoce_type.CANCEL:
