@@ -22,4 +22,4 @@ let application_classes = (function() {
     return application_classes;
 })();
 
-let application = new application_classes();
+// let application = new application_classes();

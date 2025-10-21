@@ -1,6 +1,7 @@
 let language = {
     data:{
-        ACCEPT:'1',
+        1:'1',
+        ACCEPT:'Accept',
         ACCEPTED_PAYMENT:'Accepted Payment Methods',
         ACCEPT_ADDRES:'Accepted Addresses',
         ACCOUNT:'Account',
@@ -142,6 +143,7 @@ let language = {
         DELETED:'Deleted',
         DELETED_ACCOUNT:'Deleted Account',
         DELETE_AUTHORITY_HTML:'Are you sure you want to delete the authority named?',
+        DELETE_BASKET_PRODUCT_QUESTION:'Are you sure you want to delete the product in basket?',
         DELETE_CATEGORY:'Category Deletion',
         DELETE_CATEGORY_HTML:'are you sure you want to delete the named category?',
         DELETE_CHARGE_TEXT:'Are you sure you want to delete the charge?',
@@ -206,6 +208,7 @@ let language = {
         FRUIT_JUICES:'Fruit Juices',
         FULL_SCREEN:'full screen',
         GENERAL_SETTINGS:'General Settings',
+        GET_PAYMENT_INVOICE_AFTER_PAYMENT:'Print the Payment Invoice After Payment',
         GIFTING_QUESTION:'gifting question ?',
         GROUP:'Group',
         GROUP_NAME:'Group Name',
@@ -412,6 +415,7 @@ let language = {
         RECEIPT_VIEW:'Receipt view',
         REDIRECTED:'you are being redirected...',
         REFRESH:'Refresh',
+        REFRESH_QUESTION:'The page is going to refresh! Are you sure about do you want to do it?',
         REGISTER:'Register',
         REGISTERED_ACCOUNT:'The account was successfully registered!',
         REGISTERED_ADDRESS:'Registered Address',

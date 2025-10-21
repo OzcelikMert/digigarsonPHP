@@ -165,6 +165,8 @@ let page_settings = ( function (){
                     $(`${self.id_list.FORM} [name=title]`).val(app.printer.title);
                     $(`${self.id_list.FORM} input[name="payment_invoice_user"]`).prop("checked",  app.printer.settings.showUserName);
                     $(`${self.id_list.FORM} input[name="payment_invoice_show_quantity"]`).prop("checked",  app.printer.settings.showQuantityName);
+                    $(`${self.id_list.FORM} input[name="get_payment_invoice_after_payment"]`).prop("checked",  app.printer.settings.printPaymentInvoiceAfterPayment);
+
                     self.get_printer_groups();
                 })
                 $(`${self.id_list.FORM} .e_new_group_btn`).on("click",function (){
@@ -248,6 +250,7 @@ let page_settings = ( function (){
                 $(document).on("click",`${self.id_list.FORM} .e_save_printer_settings`,function (){
                     app.printer.settings.showUserName = $(`${self.id_list.FORM} input[name="payment_invoice_user"]`).prop("checked");
                     app.printer.settings.showQuantityName = $(`${self.id_list.FORM} input[name="payment_invoice_show_quantity"]`).prop("checked");
+                    app.printer.settings.printPaymentInvoiceAfterPayment = $(`${self.id_list.FORM} input[name="get_payment_invoice_after_payment"]`).prop("checked");
                     app.printer.title = $(`${self.id_list.FORM} [name=title]`).val();
                     app.printer.safePrinterName = $(`${self.id_list.FORM} [name=safe_printer]`).val();
                     app.printer_settings.set_printer_settings().then(()=> helper_sweet_alert.success(language.data.SUCCESS_SAVED));

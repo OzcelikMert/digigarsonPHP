@@ -6,6 +6,7 @@ let page_dashboard = (function () {
   };
   let id_list = {
     HEADER: "#header",
+    RESTART_PAGE: "#restart_page",
   };
   let set_types = {
     INSERT: 0x0001,
@@ -25,10 +26,10 @@ let page_dashboard = (function () {
     page_move_table.initialize();
     page_basket.initialize();
     variable_list.NOTIFICATION = setInterval(() => {
-        get_new_orders();
-        get_new_requests();
-        page_main.get_tables();
-        console.log("NOTIFICATION interval")
+      get_new_orders();
+      get_new_requests();
+      page_main.get_tables();
+      console.log("NOTIFICATION interval");
     }, settings.ajax_timeouts.NORMAL);
   }
 
@@ -345,17 +346,27 @@ let page_dashboard = (function () {
             }
 
             element += `
-                            <div class="e_table col-12 mt-1 p-4 order-table ${isFill ? "fill" : ""} ${bg} " table-id="${table.id}">
+                            <div class="e_table col-12 mt-1 p-4 order-table ${
+                              isFill ? "fill" : ""
+                            } ${bg} " table-id="${table.id}">
                                 <div class="row">
-                                    <div class="col-5 text-left">${section_type.name}-${table.no}</div>
+                                    <div class="col-5 text-left">${section_type.name}-${
+              table.no
+            }</div>
                                     <div class="col-2 pl-1 pr-0">
-                                        <button type="button" class="e_main_table_btn btn btn-outline-danger btn-sm ${function_buttons} main-page-table-btn" function="print"">${language.data.PRINT}</button>
+                                        <button type="button" class="e_main_table_btn btn btn-outline-danger btn-sm ${function_buttons} main-page-table-btn" function="print"">${
+              language.data.PRINT
+            }</button>
                                     </div>
                                     <div class="col-2 text-center pl-1 pr-0">
-                                        <button type="button" class="e_main_table_btn btn btn-outline-light btn-sm ${function_buttons} main-page-table-btn" function="move">${language.data.MOVE}</button>
+                                        <button type="button" class="e_main_table_btn btn btn-outline-light btn-sm ${function_buttons} main-page-table-btn" function="move">${
+              language.data.MOVE
+            }</button>
                                     </div>
                                     <div class="col-3 pl-1 pr-1">
-                                        <button  type="button" class="e_main_table_btn btn  btn-table-open btn-sm main-page-table-btn" function="show">${language.data.OPEN_TABLE}</button>
+                                        <button  type="button" class="e_main_table_btn btn  btn-table-open btn-sm main-page-table-btn" function="show">${
+                                          language.data.OPEN_TABLE
+                                        }</button>
                                     </div>
                                 </div>
                             </div>
@@ -426,6 +437,28 @@ let page_dashboard = (function () {
               });
               break;
           }
+        });
+
+        $(document).on("click", id_list.RESTART_PAGE, function () {
+          $.confirm({
+            icon: "mdi mdi-help",
+            title: `<b class="text-dark">${language.data.REFRESH}</b>`,
+            backgroundDismiss: false,
+            content: `<p class="text-dark">${language.data.REFRESH_QUESTION}</p>`,
+            type: "red",
+            typeAnimated: true,
+            buttons: {
+              okay: {
+                text: language.data.ACCEPT,
+                action: function () {
+                  window.location.reload();
+                },
+              },
+              cancel: {
+                text: language.data.CANCEL,
+              },
+            },
+          });
         });
       }
 
@@ -1781,8 +1814,29 @@ let page_dashboard = (function () {
 
           switch (function_name) {
             case "delete":
-              self.variable_list.DATA.splice(self.variable_list.SELECTED_ORDER_PRODUCT_INDEX, 1);
-              self.get();
+              $.confirm({
+                icon: "mdi mdi-help",
+                title: `<b class="text-dark">${language.data.DELETE_PROCESS_TITLE}</b>`,
+                backgroundDismiss: false,
+                content: `<p class="text-dark">${language.data.DELETE_BASKET_PRODUCT_QUESTION}</p>`,
+                type: "red",
+                typeAnimated: true,
+                buttons: {
+                  okay: {
+                    text: language.data.ACCEPT,
+                    action: function () {
+                      self.variable_list.DATA.splice(
+                        self.variable_list.SELECTED_ORDER_PRODUCT_INDEX,
+                        1
+                      );
+                      self.get();
+                    },
+                  },
+                  cancel: {
+                    text: language.data.CANCEL,
+                  },
+                },
+              });
               break;
             case "show_count":
               self.get_order_product_qty();

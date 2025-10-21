@@ -53,6 +53,13 @@
                                     </label>
                                 </div>
 
+                                <div class="form-check my-3">
+                                    <input class="checkbox-md form-check-input" type="checkbox" name="get_payment_invoice_after_payment" id="get_payment_invoice_after_payment">
+                                    <label class="form-check-label pt-1 pl-4" for="get_payment_invoice_after_payment">
+                                        <lang>GET_PAYMENT_INVOICE_AFTER_PAYMENT</lang>
+                                    </label>
+                                </div>
+
                             </div>
 
 

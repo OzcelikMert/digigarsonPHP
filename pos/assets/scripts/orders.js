@@ -40,6 +40,30 @@ let orders = (function () {
     integrations.initialize();
   }
 
+  function print_payment_invoice() {
+    if (table_detail.variable_list.SELECTED_TABLE_ID === helper.db.branch_tables.SAFE) {
+      let data = table_detail.get_order_product_data(
+        table_detail.order_product_get_types.UNCONFIRMED
+      );
+      invoice.payment_receipt(data);
+    } else if (table_detail.variable_list.SELECTED_TABLE_ID === helper.db.branch_tables.TAKE_AWAY) {
+      invoice.payment_receipt_takeaway(
+        table_detail.variable_list.SELECTED_ORDER_ID,
+        table_detail.variable_list.SELECT_ADDRESS_STRING
+      );
+    } else {
+      invoice.payment_receipt(null, table_detail.variable_list.SELECTED_TABLE_ID);
+    }
+    set(
+      set_types.UPDATE_IS_PRINT,
+      { order_id: table_detail.variable_list.SELECTED_ORDER_ID },
+      function (data) {
+        data = JSON.parse(data);
+        main.get_order_related_things(main.get_type_for_order_related_things.ORDERS);
+      }
+    );
+  }
+
   let table_list = {
     id_list: {
       TABLES: "#tables",
@@ -276,8 +300,11 @@ let orders = (function () {
         $(document).on("click", `${self.class_list.TABLE}`, function () {
           let type = parseInt($(this).attr("table-type"));
           table_detail.variable_list.SELECTED_TABLE_ID = parseInt($(this).attr("table-id"));
-          table_detail.variable_list.SELECTED_ORDER_ID = parseInt($(this).attr("last-order-id") ?? 0);
-          table_detail.variable_list.IS_SELECT_ORDER = table_detail.variable_list.SELECTED_ORDER_ID > 0;
+          table_detail.variable_list.SELECTED_ORDER_ID = parseInt(
+            $(this).attr("last-order-id") ?? 0
+          );
+          table_detail.variable_list.IS_SELECT_ORDER =
+            table_detail.variable_list.SELECTED_ORDER_ID > 0;
           table_detail.variable_list.SELECTED_TABLE_TYPE =
             table_detail.variable_list.table_types.DEFAULT;
           table_detail.variable_list.ORDER_STATUS_TYPES = main.data_list.ORDER_STATUS_TYPES;
@@ -717,7 +744,8 @@ let orders = (function () {
               ) {
                 option_icon = "<i class='fa fa-bars'></i>";
               }
-              let isCatering = order_product.status === helper.db.order_product_status_types.CATERING;
+              let isCatering =
+                order_product.status === helper.db.order_product_status_types.CATERING;
               if (isCatering) {
                 price = 0;
                 catering_class = "bg-c5";
@@ -1247,9 +1275,10 @@ let orders = (function () {
       let self = this;
 
       let order = array_list.find(
-          main.data_list.ORDERS,
-          self.variable_list.SELECTED_ORDER_ID,
-          "id");
+        main.data_list.ORDERS,
+        self.variable_list.SELECTED_ORDER_ID,
+        "id"
+      );
 
       Swal.fire({
         title: language.data.ADDITON_COMBINATION,
@@ -1913,27 +1942,7 @@ let orders = (function () {
               }
               break;
             case "print_safe":
-              if (self.variable_list.SELECTED_TABLE_ID === helper.db.branch_tables.SAFE) {
-                let data = self.get_order_product_data(self.order_product_get_types.UNCONFIRMED);
-                invoice.payment_receipt(data);
-              } else if (
-                self.variable_list.SELECTED_TABLE_ID === helper.db.branch_tables.TAKE_AWAY
-              ) {
-                invoice.payment_receipt_takeaway(
-                  self.variable_list.SELECTED_ORDER_ID,
-                  self.variable_list.SELECT_ADDRESS_STRING
-                );
-              } else {
-                invoice.payment_receipt(null, self.variable_list.SELECTED_TABLE_ID);
-              }
-              set(
-                set_types.UPDATE_IS_PRINT,
-                { order_id: self.variable_list.SELECTED_ORDER_ID },
-                function (data) {
-                  data = JSON.parse(data);
-                  main.get_order_related_things(main.get_type_for_order_related_things.ORDERS);
-                }
-              );
+              print_payment_invoice();
               break;
             case "read_barcode":
               $(self.id_list.MODAL_BARCODE_SYSTEM).modal();
@@ -2473,6 +2482,9 @@ let orders = (function () {
 
             switch (self.variable_list.SELECTED_PAYMENT_MODE) {
               case self.payment_modes.FAST:
+                if (app.printer.settings.printPaymentInvoiceAfterPayment) {
+                  print_payment_invoice();
+                }
                 set(set_types.PAYMENT, data, function () {
                   main.get_order_related_things(
                     main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
@@ -2506,6 +2518,23 @@ let orders = (function () {
                   buttonsStyling: false,
                 }).then((result) => {
                   if (result.value) {
+                    let total_price = parseFloat(
+                      $(
+                        `${self.id_list.MODAL_PAYMENT} [function='total_price'] [function='price']`
+                      ).html()
+                    );
+                    let payment_price = parseFloat(
+                      $(
+                        `${self.id_list.MODAL_PAYMENT} [function='payment_price'] [function='price']`
+                      ).html()
+                    );
+
+                    if (total_price <= payment_price) {
+                      if (app.printer.settings.printPaymentInvoiceAfterPayment) {
+                        print_payment_invoice();
+                      }
+                    }
+
                     set(set_types.PAYMENT, data, function (data) {
                       data = JSON.parse(data);
                       main.get_order_related_things(
@@ -2524,18 +2553,7 @@ let orders = (function () {
                           : self.variable_list.SELECTED_ORDER_ID;
                       self.variable_list.SELECTED_TRUST_ACCOUNT_ID = 0;
                       self.get();
-                      if (
-                        parseFloat(
-                          $(
-                            `${self.id_list.MODAL_PAYMENT} [function='total_price'] [function='price']`
-                          ).html()
-                        ) <=
-                        parseFloat(
-                          $(
-                            `${self.id_list.MODAL_PAYMENT} [function='payment_price'] [function='price']`
-                          ).html()
-                        )
-                      ) {
+                      if (total_price <= payment_price) {
                         $(self.id_list.MODAL_PAYMENT).modal("hide");
                         if ($(self.class_list.PRODUCT_ORDER_CONFIRMED).length < 1) {
                           self.back_detail(self.back_detail_types.TABLE);
@@ -3226,16 +3244,13 @@ let orders = (function () {
       $(self.id_list.PRODUCT_LIST).addClass("gtc-3");
       set_events();
 
-      let barcode_system_interval = setInterval(function () {
-        if (typeof app.customize_settings !== "undefined") {
-          if (app.customize_settings.enableBarcodeSystem) {
-            $("[function=read_barcode]").show();
-          } else {
-            $("[function=read_barcode]").attr("function", "0");
-          }
-          clearInterval(barcode_system_interval);
+      /*if (typeof app.customize_settings !== "undefined") {
+        if (app.customize_settings.enableBarcodeSystem) {
+          $("[function=read_barcode]").show();
+        } else {
+          $("[function=read_barcode]").attr("function", "0");
         }
-      }, 500);
+      }*/
     },
   };
 
