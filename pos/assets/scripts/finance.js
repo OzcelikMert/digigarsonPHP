@@ -285,6 +285,8 @@ let finance = (function () {
         class_list: {
             INVOICE_SHOW_ELEMENTS: ".e_invoice_show_elements",
             INVOICES: ".e_invoices",
+            INVOICE_BTN: ".e_invoice_btn",
+            INVOICE_PRINT_BTN_MODAL: ".e_invoice_print_btn_modal" 
         },
         id_list: {
             INVOICE: "#invoice",
@@ -346,8 +348,8 @@ let finance = (function () {
                                 <td>${data_payment.date}</td>
                                 <td>${total.toFixed(2) + main.data_list.CURRENCY}</td>
                                 <td>${payment_element}</td>
-                                <td class="p-1"><button function="view" class="btn btn-sm m-0 btn-s1 w-100"><i class="fas fa-eye"></i></button></td>
-                                <td class="p-1"><button function="print" class="btn btn-sm m-0 btn-s1 w-100"><i class="fas fa-print"></i></button></td>
+                                <td class="p-1"><button function="view" class="e_invoice_btn btn btn-sm m-0 btn-s1 w-100"><i class="fas fa-eye"></i></button></td>
+                                <td class="p-1"><button function="print" class="e_invoice_btn btn btn-sm m-0 btn-s1 w-100"><i class="fas fa-print"></i></button></td>
                             </tr>
                         `;
                 });
@@ -359,14 +361,13 @@ let finance = (function () {
             let self = this;
 
             function set_events(){
-                $(document).on("click",`${self.class_list.INVOICES} button[function]`,function (){
+                $(document).on("click",`${self.class_list.INVOICE_BTN}`,function (){
                     let element = $(this).closest("tr");
                     let order_id = parseInt(element.attr("order-id"));
-                   // let order_no = element.attr("order-no");
-                   // let payment = element.attr("payment");
-                    let user = element.attr("payment");
-                    let order_section = element.attr("order-id");
-                    let function_type = $(this).attr("function")
+                    let payment = element.attr("payment");
+                    let user = element.attr("user");
+                    let order_section = element.attr("order-section");
+                    let function_type = $(this).attr("function");
                     switch(function_type){
                         case "print": invoice.payyed_payment_receipt(order_id); break;
                         case "view":
@@ -374,16 +375,24 @@ let finance = (function () {
                             $.ajax({
                                     url: "../public/assets/printer/invoice.php",
                                     type: "POST",
-                                    data: {elements: invoice.payyed_payment_receipt(order_id,true,order_section,user)},
+                                    data: {elements: invoice.payyed_payment_receipt(order_id, true)},
                                     async: false,
                                     success: function (data) {
+                                        invoice.return_html = false;
                                         $(`${self.class_list.INVOICE_SHOW_ELEMENTS} iframe`).attr("srcdoc", data);
                                         $(self.id_list.MODAL_INVOICE_SHOW).modal("show");
+                                        $(self.class_list.INVOICE_PRINT_BTN_MODAL).attr("order-id", order_id);
                                     }
                             });
                         break;
                     }
                 })
+
+                $(document).on("click", self.class_list.INVOICE_PRINT_BTN_MODAL,function (){
+                    let order_id = parseInt($(this).attr("order-id"));
+                    console.log(self.class_list.INVOICE_PRINT_BTN_MODAL, order_id);
+                    invoice.payyed_payment_receipt(order_id);
+                });
             }
             set_events();
         }

@@ -23,7 +23,7 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer">
-                <button function="print" class="e_invoice_show_btn btn btn-primary btn-lg w-50"><i class="fa fa-print"></i><lang>PRINT</lang></button>
+                <button function="print" class="e_invoice_print_btn_modal btn btn-primary btn-lg w-50"><i class="fa fa-print"></i><lang>PRINT</lang></button>
             </div>
 
         </div>

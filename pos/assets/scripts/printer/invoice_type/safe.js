@@ -20,7 +20,7 @@ let Safe = (function() {
             OrderDate: date,
             OrderTime: time,
             OrderID: data.orders[0].no,
-            Currency: "₺",
+            Currency: main.data_list.CURRENCY,
             Total: 0,
             Address: address,
             Table: data.table,
@@ -29,6 +29,8 @@ let Safe = (function() {
             height: 0
         }
         products_infos = data;
+        console.log("safe", data);
+        
     }
 
     function Header(){
@@ -128,8 +130,7 @@ let Safe = (function() {
         return `
             <div class="bottom border-top border-xs">
                 <span class="font-size-xxxs text-center w-100 d-block">
-                    <span>MimiPos</span>'u kullandığınız için teşekkür ederiz. 
-                    <span>www.mimipos.com</span>
+                    "${invoice_info.BranchName}" - Afiyet olsun, yine bekleriz.
                 </span>
             </div>
         `;
@@ -138,7 +139,7 @@ let Safe = (function() {
     Safe.prototype.invoice = function(){
         let result = {html:`<div class="invoice">${Header() + Body() + Bottom()}</div>`, height:invoice_info.height}
         invoice_info.height = (invoice_info.height < 80) ? 81 : invoice_info.height;
-        console.log("height: "+invoice_info.height);
+        console.log("result: ", result);
         return result;
     }
 

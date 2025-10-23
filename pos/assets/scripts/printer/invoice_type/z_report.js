@@ -23,15 +23,14 @@ let z_report =  (function() {
                 <span class="font-size-xxs bold text-left w-100 d-block">Kasa Kapanış: ${data.info.safe_close}</span>
                 <span class="font-size-xs bold text-left w-100 d-block">Kasa No: ${data.info.safe}</span>
             </div>
-            <hr>
-        `;
+            `;
         }else {
             return `
             <div class="header">
                 <span class="font-size-xxm bold text-center mb-5 w-100 d-block">Z RAPORU</span>
-                <span class="font-size-xxs bold text-left w-100 d-block">Kasa Kapanış: ${(new Date()).toLocaleDateString('tr-TR')}</span>
+                <span class="font-size-xxs bold text-left w-100 d-block">Z Raporu Tarih: ${(new Date()).toLocaleDateString('tr-TR')}</span>
             </div>
-            <hr>`;
+            `;
         }
     }
 
@@ -204,8 +203,7 @@ let z_report =  (function() {
         return `
             <div class="bottom border-top border-xs">
                 <span class="font-size-xxs text-center w-100 d-block">
-                    <span class="bold">MimiPos</span>'u kullandığınız için teşekkür ederiz. 
-                    <span class="bold">www.mimipos.com</span>
+                    <span class="bold">MimiPos</span>'u kullandığınız için teşekkür ederiz.
                 </span>
             </div>
         `;

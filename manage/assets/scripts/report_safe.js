@@ -643,7 +643,7 @@ let report_safe = (function () {
                             $.ajax({
                                 url: "../public/assets/printer/invoice.php",
                                 type: "POST",
-                                data: {elements: invoice.payyed_payment_receipt(self.variable_list.SELECTED_ORDER_ID,true, table, name)},
+                                data: {elements: invoice.payyed_payment_receipt(self.variable_list.SELECTED_ORDER_ID, true)},
                                 async: false,
                                 success: function (data) {
                                     $(`${self.class_list.INVOICE_SHOW_ELEMENTS} iframe`).attr("srcdoc", data);

@@ -102,7 +102,7 @@ let app = (function () {
       if (index === -1) {
         app.printer.groups.push({
           name: group_name,
-          printeNamer: printer_name,
+          printerName: printer_name,
           categories: Array(),
         });
       } else {
