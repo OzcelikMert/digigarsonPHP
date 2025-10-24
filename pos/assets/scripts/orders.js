@@ -31,8 +31,6 @@ let orders = (function () {
     initialize();
   }
   function initialize() {
-    main.get_table_related_things(main.get_type_for_table_related_things.ALL);
-    main.get_order_related_things(main.get_type_for_order_related_things.ORDER_PRODUCTS);
     table_list.initialize();
     table_detail.initialize();
     sections.initialize();
@@ -1008,8 +1006,10 @@ let orders = (function () {
 
           elements.forEach((element) => {
             element = $(element);
+            let id = parseInt(element.attr("product-id"));
+            let product = array_list.find(main.data_list.PRODUCTS, id, "id");
             data.products.push({
-              id: parseInt(element.attr("product-id")),
+              id: id,
               quantity: parseFloat(element.attr("quantity")),
               price: parseFloat(element.attr("price")),
               vat: parseFloat(element.attr("vat")),
@@ -1018,6 +1018,7 @@ let orders = (function () {
               comment: element.attr("comment"),
               type: helper.db.order_product_types.PRODUCT,
               options: JSON.parse(element.attr("options")),
+              category_id: product.category_id,
             });
           });
           break;
@@ -1394,6 +1395,8 @@ let orders = (function () {
     },
     add_order_product: function (product = { quantity: 1, qty: 1 }) {
       let self = this;
+      console.log(product);
+
       function get_data() {
         return {
           id: product.id,
@@ -1449,7 +1452,9 @@ let orders = (function () {
             element = element.closest(self.class_list.PRODUCT);
 
             let id = parseInt(element.attr("product-id"));
-
+            let product = array_list.find(main.data_list.PRODUCTS, id, "id");
+            console.log(product);
+            
             switch (function_name) {
               case "add":
                 if (
@@ -1459,17 +1464,19 @@ let orders = (function () {
                     id,
                     "product_id"
                   ) !== "undefined" ||
-                    array_list.find(main.data_list.PRODUCTS, id, "id").quantity_id != 1)
+                    product.quantity_id != 1)
                 ) {
                   $(this).prev().trigger("click");
                   return;
                 }
                 function get_data() {
                   let data = {
+                    id: id,
                     quantity: 1,
                     comment: "",
                     options: Array(),
                     price: 0.0,
+                    category_id: product.category_id,
                   };
 
                   let qty = $(self.class_list.BTN_QTY_SHOW).html();
@@ -1664,12 +1671,15 @@ let orders = (function () {
         $(document).on("submit", self.id_list.FORM_PRODUCT_OPTION, function (e) {
           e.preventDefault();
           let element = $(this);
+          let product = array_list.find(main.data_list.PRODUCTS, self.variable_list.SELECTED_PRODUCT_ID, "id");
+            console.log(product);
           function get_data() {
             let data = {
               quantity: 1,
               comment: "",
               options: Array(),
               price: 0.0,
+              category_id: product.category_id
             };
             data = Object.assign(data, element.serializeObject());
 

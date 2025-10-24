@@ -5,7 +5,7 @@ let invoice = (function () {
   let printer_name = "";
   let view = false;
   let order_id = 0;
-  let interval_auto_print = null;
+  invoice.interval_auto_print = null;
   let auto_print = false;
   let printer_ajax_path = `${settings.paths.primary.PHP}orders/`;
   let multi_print_data = [];
@@ -71,27 +71,27 @@ let invoice = (function () {
     data.table = "Kasa Satış";
     return data;
   }
-  invoice.setPrint = function (value, printer = "", multi_print = false) {
+  invoice.setPrint = function (value, printer = "") {
     console.log("invoice.setPrint", value, printer);
-    if (!multi_print) {
-      $.ajax({
-        url: "../../public/assets/printer/invoice.php",
-        type: "POST",
-        data: { elements: value.html, height: value.height, width: 72 },
-        async: false,
-        success: function (data) {
-          value.html = data;
-          if(typeof app !== "undefined") {
-            printer = printer ?? app.printer.safePrinterName;
-            app.printer_settings.print_invoice(printer, value);
-          }
-        },
-      });
-    } else if (multi_print) {
+    //if (!multi_print) {
+    $.ajax({
+      url: "../../public/assets/printer/invoice.php",
+      type: "POST",
+      data: { elements: value.html, height: value.height, width: 72 },
+      async: false,
+      success: function (data) {
+        value.html = data;
+        if (typeof app !== "undefined") {
+          printer = printer ?? app.printer.safePrinterName;
+          app.printer_settings.print_invoice(printer, value);
+        }
+      },
+    });
+    /* } else if (multi_print) {
       value.printer = printer;
       multi_print_data.push(value);
       console.log("add multi_print_data");
-    }
+    }*/
   };
 
   function safe_invoice(address_str = 1) {
@@ -103,7 +103,7 @@ let invoice = (function () {
   }
   function z_report_invoice(invoice_data) {
     console.log(invoice_data);
-    invoice_data.info = { currency: "₺", safe: 0 };
+    invoice_data.info = { currency: main.data_list.CURRENCY, safe: 0 };
     let e = new z_report(invoice_data);
     let data = e.invoice();
     invoice.setPrint(data);
@@ -118,6 +118,7 @@ let invoice = (function () {
     let product_groups = Array();
 
     data.products.forEach(function (item) {
+      if (item.is_print == 1) return;
       product = array_list.find(main.data_list.PRODUCTS, parseInt(item.product_id), "id");
       if (!Array.isArray(product_groups[product.category_id]))
         product_groups[product.category_id] = Array();
@@ -171,7 +172,7 @@ let invoice = (function () {
       OrderDate: date,
       OrderTime: time,
       OrderID: data.orders[0].no,
-      Currency: "₺",
+      Currency: main.data_list.CURRENCY,
       UserName: `(${data.is_qr_order ? language.data.CUSTOMER : language.data.AUTHORIZED}) ${
         data.user_name
       }`,
@@ -181,7 +182,7 @@ let invoice = (function () {
         let e = new Kitchen(info, print_page);
         let data = e.invoice();
         helper.log(data, "kitchen_invoice send set print");
-        invoice.setPrint(data, print_page.printer_name, true);
+        invoice.setPrint(data, print_page.printer_name);
       }
     });
   }
@@ -226,14 +227,16 @@ let invoice = (function () {
     return invoice("", type, invoice.print_invoce_type.PAYMENT_RECEIPT, 0);
   };
   invoice.auto_print = function () {
-    interval_auto_print = setInterval(function () {
+    invoice.interval_auto_print = setInterval(function () {
       if (app.printer.groups.length > 0) {
-        console.log("-- INVOICE.AUTO_PRINT --");
+        console.log("-- AUTO_PRINT timer --");
         auto_print = true;
+        let printerGroups = app.printer.groups;
+        let categories = [...new Set(printerGroups.map((group) => group.categories).flat())];
         $.ajax({
           url: `${printer_ajax_path}set.php`,
           type: "POST",
-          data: { set_type: 9 },
+          data: { set_type: 9, categories: categories },
           success: function (data) {
             data = JSON.parse(data);
             console.log(data);
@@ -257,19 +260,19 @@ let invoice = (function () {
                   break;
               }
             });
-            if (multi_print_data.length > 0) {
+            /*if (multi_print_data.length > 0) {
               console.log("multi print data girdi");
               let data = multi_print_data;
               multi_print_data = [];
               app.printer_settings.print_multi_invoice(data);
               // print_manager.manager.add_print_data_log(data);
               auto_print = false;
-            }
+            }*/
           },
           timeout: settings.ajax_timeouts.SLOW,
         });
       } else {
-        clearInterval(print_interval);
+        clearInterval(interval_auto_print);
       }
     }, settings.ajax_timeouts.NORMAL);
   };
@@ -311,10 +314,10 @@ let invoice = (function () {
       print_data.orders_id.push(get_id); // get_id => order_id
     }
 
-    if(invoice.table_and_section != null){
-        print_data.table = invoice.table_and_section;
-    }else {
-        print_data.table = get_table_string(print_data.orders[0].table_id);
+    if (invoice.table_and_section != null) {
+      print_data.table = invoice.table_and_section;
+    } else {
+      print_data.table = get_table_string(print_data.orders[0].table_id);
     }
 
     main.data_list.ORDER_PRODUCTS.forEach(function (product) {

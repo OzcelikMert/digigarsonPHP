@@ -57,6 +57,7 @@ class post_keys_insert
 class products_keys
 {
     const ID = "id",
+        CATEGORY_ID = "category_id",
         QUANTITY = "quantity",
         PRICE = "price",
         VAT = "vat",
@@ -213,11 +214,13 @@ class insert
 
             $invoice_products[$index] = array(
                 "product_id"    => (int)$value[products_keys::ID],
+                "category_id"   => (int)($value[products_keys::CATEGORY_ID] ?? 0),
                 "order_id"      => (int)user::post(post_keys_insert::ORDER_ID),
                 "price"         => (float)$value[products_keys::PRICE],
                 "quantity"      => (float)$value[products_keys::QUANTITY],
                 "qty"           => (int)$value[products_keys::QTY],
                 "comment"       => $value[products_keys::COMMENT],
+                "is_print"      => 0
             );
 
             $invoice_products[$index]["options"] = array();

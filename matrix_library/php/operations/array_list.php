@@ -1,7 +1,9 @@
 <?php
+
 namespace matrix_library\php\operations;
 
-class array_list {
+class array_list
+{
     /**
      * Finds the desired value index.<br>
      * Returns -1 if it cannot find the desired value.
@@ -9,9 +11,10 @@ class array_list {
      * @param $search_value
      * @return int
      */
-    public static function index_of(array $array, $search_value){
-        for ($i=0; $i < count($array) ; $i++) {
-            if($array[$i] == $search_value){
+    public static function index_of(array $array, $search_value)
+    {
+        for ($i = 0; $i < count($array); $i++) {
+            if ($array[$i] == $search_value) {
                 return $i;
             }
         }
@@ -26,7 +29,8 @@ class array_list {
      * @param string $key
      * @return mixed
      */
-    public static function find(array $array, mixed $value, string $key = ""){
+    public static function find(array $array, mixed $value, string $key = "")
+    {
         $key = array_search($value, array_column($array, $key));
         return ($key !== false) ? $array[$key] : null;
     }
@@ -36,8 +40,19 @@ class array_list {
      * @param string $key_name
      * @return string
      */
-    public static function convert_array_key(string $key_name){
-        $key_name = utf8_encode(strtolower(variable_operations::clear($key_name)));
+    public static function convert_array_key(string $key_name)
+    {
+        $key_name = utf8_encode(strtolower(variable::clear($key_name)));
         return $key_name;
+    }
+
+    public static function array_all(array $array, callable $callback): bool
+    {
+        foreach ($array as $item) {
+            if (!$callback($item)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

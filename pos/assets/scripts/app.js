@@ -77,7 +77,6 @@ let app = (function () {
       await ipc.invoke(app.listeners.GET_PRINTERS).then((result) => {
         app.printer_list = result;
         app.ready.printer_list = true;
-        initialize_main();
       });
     },
     get_printer_settings: async function () {
@@ -87,7 +86,6 @@ let app = (function () {
           app.printer = result;
           await helper.log(app.printer, " app.printer");
           app.ready.printer_settings = true;
-          initialize_main();
         });
     },
     set_printer_settings: async function () {
@@ -172,7 +170,6 @@ let app = (function () {
 
           helper.log("GET: APP_SETTINGS");
           app.ready.app_settings = true;
-          initialize_main();
         });
     },
     set: function () {
@@ -307,12 +304,6 @@ let app = (function () {
       self.get_token();
     },
   };
-
-  function initialize_main() {
-    if (app.printer_list && app.printer_settings && app.app_settings) {
-      //let _main = new main();
-    }
-  }
 
   return app;
 })();
