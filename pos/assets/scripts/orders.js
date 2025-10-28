@@ -1454,7 +1454,7 @@ let orders = (function () {
             let id = parseInt(element.attr("product-id"));
             let product = array_list.find(main.data_list.PRODUCTS, id, "id");
             console.log(product);
-            
+
             switch (function_name) {
               case "add":
                 if (
@@ -1671,15 +1671,19 @@ let orders = (function () {
         $(document).on("submit", self.id_list.FORM_PRODUCT_OPTION, function (e) {
           e.preventDefault();
           let element = $(this);
-          let product = array_list.find(main.data_list.PRODUCTS, self.variable_list.SELECTED_PRODUCT_ID, "id");
-            console.log(product);
+          let product = array_list.find(
+            main.data_list.PRODUCTS,
+            self.variable_list.SELECTED_PRODUCT_ID,
+            "id"
+          );
+          console.log(product);
           function get_data() {
             let data = {
               quantity: 1,
               comment: "",
               options: Array(),
               price: 0.0,
-              category_id: product.category_id
+              category_id: product.category_id,
             };
             data = Object.assign(data, element.serializeObject());
 
@@ -2492,17 +2496,20 @@ let orders = (function () {
 
             switch (self.variable_list.SELECTED_PAYMENT_MODE) {
               case self.payment_modes.FAST:
-                if (app.printer.settings.printPaymentInvoiceAfterPayment) {
-                  print_payment_invoice();
-                }
                 set(set_types.PAYMENT, data, function () {
                   main.get_order_related_things(
                     main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
+                  );
+                  main.get_payments_related_things(
+                    main.get_type_for_payments_related_things.PAYMENTS
                   );
                   helper_sweet_alert.success(
                     language.data.PROCESS_SUCCESS_TITLE,
                     language.data.PAID_SUCCESS_TEXT
                   );
+                  if (app.printer.settings.printPaymentInvoiceAfterPayment) {
+                    print_payment_invoice();
+                  }
                   self.variable_list.SELECTED_ORDER_ID = 0;
                   self.variable_list.SELECTED_TRUST_ACCOUNT_ID = 0;
                   self.get();
@@ -2539,12 +2546,6 @@ let orders = (function () {
                       ).html()
                     );
 
-                    if (total_price <= payment_price) {
-                      if (app.printer.settings.printPaymentInvoiceAfterPayment) {
-                        print_payment_invoice();
-                      }
-                    }
-
                     set(set_types.PAYMENT, data, function (data) {
                       data = JSON.parse(data);
                       main.get_order_related_things(
@@ -2564,6 +2565,9 @@ let orders = (function () {
                       self.variable_list.SELECTED_TRUST_ACCOUNT_ID = 0;
                       self.get();
                       if (total_price <= payment_price) {
+                        if (app.printer.settings.printPaymentInvoiceAfterPayment) {
+                          print_payment_invoice();
+                        }
                         $(self.id_list.MODAL_PAYMENT).modal("hide");
                         if ($(self.class_list.PRODUCT_ORDER_CONFIRMED).length < 1) {
                           self.back_detail(self.back_detail_types.TABLE);

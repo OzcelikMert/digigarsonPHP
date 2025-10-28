@@ -94,11 +94,24 @@ let Safe = (function() {
                 <td width="70%"><div class="font-size-xs bold text-right w-100 d-block">${(invoice_info.Total + (invoice_info.discount * -1)).toFixed(2)}<span class="lighter">${invoice_info.Currency}</span></div></td>   
             </tr>
             <tr>
-                <td width="30%"><span class="font-size-x bold text-left w-100 d-block">İskonto</span></td>
+                <td width="30%"><span class="font-size-xxxs bold text-left w-100 d-block">İskonto</span></td>
                 <td width="70%"><div class="font-size-xs bold text-right w-100 d-block">${(invoice_info.discount * -1).toFixed(2)}<span class="lighter">${invoice_info.Currency}</span></div></td>   
             </tr>
         `;
         invoice_info.height += (invoice_info.discount === 0) ? 25 : 0;
+
+        let payments_html = products_infos.payments.map(payment => {
+            const type = array_list.find(main.data_list.PAYMENT_TYPES, payment.type, "id");
+            const amount = parseFloat(payment.price);
+            invoice_info.height +=  4.2;
+
+            return `
+                <tr>
+                        <td width="30%"><span class="font-size-xxxs bold text-left w-100 d-block">${type.name}</span></td>
+                        <td width="70%"><div class="font-size-xs bold text-right w-100 d-block">${amount.toFixed(2)}<span class="lighter">${invoice_info.Currency}</span></div></td>   
+                </tr>
+            `;
+        }).join("");
 
         return `
             <div class="values border-top border-xs">
@@ -111,12 +124,13 @@ let Safe = (function() {
                     </tr></thead>
                     <tbody>${values}</tbody>
                     </table>
-                <table class="mt-2" width="100%">
+                <table class="mt-2 border-top border-xs" width="100%">
                     ${discount_html}
                     <tr>
                         <td width="30%"><span class="font-size-xs bold text-left w-100 d-block">Toplam</span></td>
                         <td width="70%"><div class="font-size-xm bold text-right w-100 d-block">${parseFloat(invoice_info.Total).toFixed(2)}<span class="lighter">${invoice_info.Currency}</span></div></td>   
                     </tr>
+                    ${payments_html}
                 </table>
                 </div>
                 </div>

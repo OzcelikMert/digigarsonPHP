@@ -292,13 +292,14 @@ let invoice = (function () {
       table: "",
       user_name: "",
       is_qr_order: false,
+      payments: Array(),
     };
 
     if (type === invoice.print_type.TABLE) {
       //get table orders
       print_data.orders =
         order_id === 0
-          ? array_list.find_multi(main.data_list.ORDERS, get_id, "table_id")
+          ? array_list.find_multi(main.data_list.ORDERS, get_id, "table_id") // get_id => table_id
           : array_list.find_multi(main.data_list.ORDERS, order_id, "id");
 
       //table get order id
@@ -310,9 +311,26 @@ let invoice = (function () {
       });
     } else if (type === invoice.print_type.ORDER || type === invoice.print_type.VIEW) {
       //get order id
-      print_data.orders = array_list.find_multi(main.data_list.ORDERS, get_id, "id"); // get_id => table_id
-      print_data.orders_id.push(get_id); // get_id => order_id
+      print_data.orders = array_list.find_multi(main.data_list.ORDERS, get_id, "id"); // get_id => order_id
+      print_data.orders_id.push(get_id);
     }
+
+    print_data.orders.forEach(order => {
+      const payments = array_list.find_multi(main.data_list.PAYMENTS, order.id, "order_id");
+
+      payments.forEach(payment => {
+        if ([2, 3].includes(payment.status) || payment.type_id == 9) return;
+        let index = array_list.index_of(print_data.payments, payment.type, "type");
+        if(index > -1) {
+          print_data.payments[index].price += parseFloat(payment.price);
+          return;
+        }
+        print_data.payments.push(payment);
+      });
+    });
+
+    console.log(print_data.orders);
+    
 
     if (invoice.table_and_section != null) {
       print_data.table = invoice.table_and_section;
