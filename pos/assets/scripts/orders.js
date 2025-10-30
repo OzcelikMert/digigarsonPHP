@@ -38,7 +38,7 @@ let orders = (function () {
     integrations.initialize();
   }
 
-  function print_payment_invoice() {
+  function print_payment_invoice(order_id = 0) {
     if (table_detail.variable_list.SELECTED_TABLE_ID === helper.db.branch_tables.SAFE) {
       let data = table_detail.get_order_product_data(
         table_detail.order_product_get_types.UNCONFIRMED
@@ -52,14 +52,13 @@ let orders = (function () {
     } else {
       invoice.payment_receipt(null, table_detail.variable_list.SELECTED_TABLE_ID);
     }
-    set(
-      set_types.UPDATE_IS_PRINT,
-      { order_id: table_detail.variable_list.SELECTED_ORDER_ID },
-      function (data) {
-        data = JSON.parse(data);
-        main.get_order_related_things(main.get_type_for_order_related_things.ORDERS);
+
+    main.data_list.ORDERS.map(order => {
+      if((order_id != 0 && order.id == order_id) || (order_id == 0 && order.table_id == table_detail.variable_list.SELECTED_TABLE_ID)){
+        order.is_print = 1;
       }
-    );
+      return order;
+    });
   }
 
   let table_list = {
@@ -2497,19 +2496,21 @@ let orders = (function () {
             switch (self.variable_list.SELECTED_PAYMENT_MODE) {
               case self.payment_modes.FAST:
                 set(set_types.PAYMENT, data, function () {
-                  main.get_order_related_things(
-                    main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
-                  );
                   main.get_payments_related_things(
                     main.get_type_for_payments_related_things.PAYMENTS
+                  );
+                  console.log("Payment done fast mode and invoice is printing...");
+                  if (app.printer.settings.printPaymentInvoiceAfterPayment) {
+                    print_payment_invoice();
+                  }
+                  console.log("Payment done fast mode and invoice has been printed!");
+                  main.get_order_related_things(
+                    main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
                   );
                   helper_sweet_alert.success(
                     language.data.PROCESS_SUCCESS_TITLE,
                     language.data.PAID_SUCCESS_TEXT
                   );
-                  if (app.printer.settings.printPaymentInvoiceAfterPayment) {
-                    print_payment_invoice();
-                  }
                   self.variable_list.SELECTED_ORDER_ID = 0;
                   self.variable_list.SELECTED_TRUST_ACCOUNT_ID = 0;
                   self.get();
@@ -2548,11 +2549,16 @@ let orders = (function () {
 
                     set(set_types.PAYMENT, data, function (data) {
                       data = JSON.parse(data);
-                      main.get_order_related_things(
-                        main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
-                      );
                       main.get_payments_related_things(
                         main.get_type_for_payments_related_things.PAYMENTS
+                      );
+                      if (total_price <= payment_price) {
+                        if (app.printer.settings.printPaymentInvoiceAfterPayment) {
+                          print_payment_invoice();
+                        }
+                      }
+                      main.get_order_related_things(
+                        main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
                       );
                       helper_sweet_alert.success(
                         language.data.PROCESS_SUCCESS_TITLE,
@@ -2565,9 +2571,6 @@ let orders = (function () {
                       self.variable_list.SELECTED_TRUST_ACCOUNT_ID = 0;
                       self.get();
                       if (total_price <= payment_price) {
-                        if (app.printer.settings.printPaymentInvoiceAfterPayment) {
-                          print_payment_invoice();
-                        }
                         $(self.id_list.MODAL_PAYMENT).modal("hide");
                         if ($(self.class_list.PRODUCT_ORDER_CONFIRMED).length < 1) {
                           self.back_detail(self.back_detail_types.TABLE);

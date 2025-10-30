@@ -116,12 +116,12 @@ let app = (function () {
       this.set_printer_settings();
     },
     print_invoice: function (printer_name, print_data) {
-      console.log('print_invoice', printer_name, print_data);
-      
+      console.log('print_invoice --- invoice is priting...', printer_name, print_data);
       helper.log(printer_name, "print_data");
       ipc
         .invoke(app.listeners.PRINT, {printerName: printer_name, data: print_data})
         .then((result) => {
+          console.log("print_invoice --- invoice printed!");
           helper.log(result);
         });
     },

@@ -42,7 +42,7 @@ let invoice = (function () {
           invoice.return_html = false;
           return html;
         }
-        safe_invoice(address);
+        return safe_invoice(address);
         break;
       case invoice.print_invoce_type.KITCHEN:
       case invoice.print_invoce_type.CANCEL:
@@ -50,7 +50,7 @@ let invoice = (function () {
         kitchen_invoice(data);
         break;
       case invoice.print_invoce_type.Z_REPORT:
-        z_report_invoice(data);
+        return z_report_invoice(data);
         break;
     }
     return true;
@@ -74,6 +74,7 @@ let invoice = (function () {
   invoice.setPrint = function (value, printer = "") {
     console.log("invoice.setPrint", value, printer);
     //if (!multi_print) {
+
     $.ajax({
       url: "../../public/assets/printer/invoice.php",
       type: "POST",
@@ -81,12 +82,15 @@ let invoice = (function () {
       async: false,
       success: function (data) {
         value.html = data;
-        if (typeof app !== "undefined") {
+        if (!invoice.return_html && typeof app !== "undefined") {
           printer = printer ?? app.printer.safePrinterName;
           app.printer_settings.print_invoice(printer, value);
         }
       },
     });
+
+    if (invoice.return_html) return value.html;
+    return value;
     /* } else if (multi_print) {
       value.printer = printer;
       multi_print_data.push(value);
@@ -98,15 +102,14 @@ let invoice = (function () {
     console.log(invoice_data);
     let e = new Safe(invoice_data, address_str);
     let data = e.invoice();
-    if (invoice.return_html && view) return data.html;
-    invoice.setPrint(data);
+    return invoice.setPrint(data);
   }
   function z_report_invoice(invoice_data) {
     console.log(invoice_data);
     invoice_data.info = { currency: main.data_list.CURRENCY, safe: 0 };
     let e = new z_report(invoice_data);
     let data = e.invoice();
-    invoice.setPrint(data);
+    return invoice.setPrint(data);
   }
   function kitchen_invoice(data = Array()) {
     console.log(data);
@@ -203,10 +206,11 @@ let invoice = (function () {
   }
 
   invoice.z_report = function (data) {
-    invoice(null, null, invoice.print_invoce_type.Z_REPORT, null, data);
+    return invoice(null, null, invoice.print_invoce_type.Z_REPORT, null, data);
   };
   invoice.payment_receipt = function (data, table_id = 0) {
     order_id = 0;
+    console.log("invoice.payment_receipt");
     let type = table_id === 0 ? invoice.print_type.SAFE_ORDER : invoice.print_type.TABLE;
     invoice(printer_name, type, invoice.print_invoce_type.PAYMENT_RECEIPT, table_id, data);
   };

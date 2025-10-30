@@ -1,4 +1,5 @@
 <?php
+
 namespace manage\functions\report_safe\get;
 
 use config\db;
@@ -16,12 +17,15 @@ use config\table_helper\products as tbl5;
 use config\table_helper\product_option_items as tbl6;
 use config\table_helper\orders as tbl7;
 
-class post_keys {
+class post_keys
+{
     const SAFE_ID = "safe_id";
 }
 
-class z_report {
-    public function __construct(db $db, db $db_backup, sessions $sessions, echo_values &$echo) {
+class z_report
+{
+    public function __construct(db $db, db $db_backup, sessions $sessions, echo_values &$echo)
+    {
         $db_ = (user::post(post_keys::SAFE_ID) == 0) ? $db : $db_backup;
         $echo->message = "Z REPORT";
         $echo->rows = array(
@@ -33,14 +37,16 @@ class z_report {
         );
     }
 
-    private function get_payments(db $db, db $db_, sessions $sessions) : array{
+    private function get_payments(db $mainDB, db $db, sessions $sessions): array
+    {
         return array(
-            "data" => $db_->db_select(
+            "data" => $db->db_select(
                 array(
                     tbl::TYPE,
-                    $db->as_name($db->sum(tbl::PRICE),"price")
-                ),tbl::TABLE_NAME,
-                where: $db->where->equals([
+                    $mainDB->as_name($mainDB->sum(tbl::PRICE), "price")
+                ),
+                tbl::TABLE_NAME,
+                where: $mainDB->where->equals([
                     tbl::BRANCH_ID => $sessions->get->BRANCH_ID,
                     tbl::SAFE_ID   => user::post(post_keys::SAFE_ID),
                     tbl::STATUS    => [
@@ -48,29 +54,31 @@ class z_report {
                         order_payment_status_types::CANCEL
                     ],
                     tbl::IS_DELETE => 0
-                ]). " AND ".$db->where->greater_than([tbl::ORDER_ID => 0 ]),
+                ]) . " AND " . $mainDB->where->greater_than([tbl::ORDER_ID => 0]),
                 group_by: tbl::TYPE,
                 order_by: tbl::TYPE
             )->rows,
 
-            "names" => $db->db_select(
+            "names" => $mainDB->db_select(
                 array(
                     tbl2::ID,
-                    $db->as_name(tbl2::NAME.$sessions->get->LANGUAGE_TAG, "name")
+                    $mainDB->as_name(tbl2::NAME . $sessions->get->LANGUAGE_TAG, "name")
                 ),
                 tbl2::TABLE_NAME
             )->rows
         );
     }
 
-    private function get_trust_payments(db $db, db $db_, sessions $sessions) : array{
+    private function get_trust_payments(db $mainDB, db $db, sessions $sessions): array
+    {
         return array(
-            "data" => $db_->db_select(
+            "data" => $db->db_select(
                 array(
                     tbl::TYPE,
-                    $db->as_name($db->sum(tbl::PRICE),"price")
-                ),tbl::TABLE_NAME,
-                where: $db->where->equals([
+                    $mainDB->as_name($mainDB->sum(tbl::PRICE), "price")
+                ),
+                tbl::TABLE_NAME,
+                where: $mainDB->where->equals([
                     tbl::BRANCH_ID => $sessions->get->BRANCH_ID,
                     tbl::SAFE_ID   => user::post(post_keys::SAFE_ID),
                     tbl::ORDER_ID  => 0,
@@ -83,72 +91,73 @@ class z_report {
                 order_by: tbl::TYPE
             )->rows,
 
-            "names" => $db->db_select(
+            "names" => $mainDB->db_select(
                 array(
                     tbl2::ID,
-                    $db->as_name(tbl2::NAME.$sessions->get->LANGUAGE_TAG, "name")
+                    $mainDB->as_name(tbl2::NAME . $sessions->get->LANGUAGE_TAG, "name")
                 ),
                 tbl2::TABLE_NAME
             )->rows
         );
     }
 
-    private function get_products(db $db, db $db_, sessions $sessions) : array{
+    private function get_products(db $mainDB, db $db, sessions $sessions): array
+    {
         $id = array();
         $id_options = array();
 
-        $data = $db_->db_select(
+        $data = $db->db_select(
             array(
                 tbl3::PRODUCT_ID,
-                $db->as_name($db->sum( tbl3::QUANTITY),"quantity"),
-                $db->as_name($db->sum( tbl3::QTY),"qty"),
-                $db->as_name($db->sum( tbl3::PRICE),"price"),
+                $mainDB->as_name($mainDB->sum(tbl3::QUANTITY), "quantity"),
+                $mainDB->as_name($mainDB->sum(tbl3::QTY), "qty"),
+                $mainDB->as_name($mainDB->sum(tbl3::PRICE), "price"),
             ),
             tbl3::TABLE_NAME,
-            $db->join->inner([
+            $mainDB->join->inner([
                 tbl7::TABLE_NAME => [tbl7::ID => tbl3::ORDER_ID]
             ]),
-            where: $db->where->equals([
+            where: $mainDB->where->equals([
                 tbl3::BRANCH_ID => $sessions->get->BRANCH_ID,
                 tbl7::SAFE_ID   => user::post(post_keys::SAFE_ID)
-            ])." AND ".
-            $db->where->not_like([
-                tbl3::STATUS => order_products_status_types::CANCEL
-            ]),
+            ]) . " AND " .
+                $mainDB->where->not_like([
+                    tbl3::STATUS => order_products_status_types::CANCEL
+                ]),
             group_by: tbl3::PRODUCT_ID,
             order_by: tbl3::PRODUCT_ID
         )->rows;
 
-        foreach ($data as $data_){
-            if(array_list::index_of($id, $data_["product_id"]) < 0) array_push($id, $data_["product_id"]);
+        foreach ($data as $data_) {
+            if (array_list::index_of($id, $data_["product_id"]) < 0) array_push($id, $data_["product_id"]);
         }
 
-        $data_options = $db_->db_select(
+        $data_options = $db->db_select(
             array(
                 tbl3::PRODUCT_ID,
                 tbl4::OPTION_ITEM_ID,
-                $db->as_name($db->sum(tbl4::QTY),"qty"),
-                $db->as_name($db->sum(tbl4::PRICE),"price"),
+                $mainDB->as_name($mainDB->sum(tbl4::QTY), "qty"),
+                $mainDB->as_name($mainDB->sum(tbl4::PRICE), "price"),
             ),
             tbl4::TABLE_NAME,
-            $db->join->inner([
+            $mainDB->join->inner([
                 tbl3::TABLE_NAME => [tbl3::ID => tbl4::ORDER_PRODUCT_ID],
                 tbl7::TABLE_NAME => [tbl7::ID => tbl3::ORDER_ID]
             ]),
-            $db->where->equals([
+            $mainDB->where->equals([
                 tbl4::BRANCH_ID => $sessions->get->BRANCH_ID,
                 tbl3::PRODUCT_ID => $id,
                 tbl7::SAFE_ID   => user::post(post_keys::SAFE_ID)
-            ])." AND ".
-            $db->where->not_like([
-                tbl3::STATUS => order_products_status_types::CANCEL
-            ]),
-            tbl3::PRODUCT_ID.",".tbl4::OPTION_ITEM_ID,
+            ]) . " AND " .
+                $mainDB->where->not_like([
+                    tbl3::STATUS => order_products_status_types::CANCEL
+                ]),
+            tbl3::PRODUCT_ID . "," . tbl4::OPTION_ITEM_ID,
             tbl4::OPTION_ITEM_ID
         )->rows;
 
-        foreach ($data_options as $data_){
-            if(array_list::index_of($id_options, $data_["option_item_id"]) < 0) array_push($id_options, $data_["option_item_id"]);
+        foreach ($data_options as $data_) {
+            if (array_list::index_of($id_options, $data_["option_item_id"]) < 0) array_push($id_options, $data_["option_item_id"]);
         }
 
         return array(
@@ -156,48 +165,51 @@ class z_report {
 
             "data_options" => $data_options,
 
-            "names" => $db->db_select(
+            "names" => $mainDB->db_select(
                 array(
                     tbl5::ID,
                     tbl5::QUANTITY_ID,
                     tbl5::CODE,
-                    $db->as_name(tbl5::NAME.$sessions->get->LANGUAGE_TAG, "name")
+                    $mainDB->as_name(tbl5::NAME . $sessions->get->LANGUAGE_TAG, "name")
                 ),
                 tbl5::TABLE_NAME,
-                where: $db->where->equals([
+                where: $mainDB->where->equals([
                     tbl5::ID => $id
                 ])
             )->rows,
 
-            "name_options" => $db->db_select(
+            "name_options" => $mainDB->db_select(
                 array(
                     tbl6::ID,
-                    $db->as_name(tbl6::NAME.$sessions->get->LANGUAGE_TAG, "name")
+                    $mainDB->as_name(tbl6::NAME . $sessions->get->LANGUAGE_TAG, "name")
                 ),
                 tbl6::TABLE_NAME,
-                where: $db->where->equals([
+                where: $mainDB->where->equals([
                     tbl6::ID => $id_options
                 ])
             )->rows
         );
     }
 
-    private function get_cancel_products(db $db, db $db_, sessions $sessions) : array{
-        $id = array();
-        $id_options = array();
+    private function get_cancel_products(db $mainDB, db $db, sessions $sessions): array
+    {
+        $data = array();
+        $data_options = array();
+        $names = array();
+        $name_options = array();
 
-        $data = $db_->db_select(
+        $data = $db->db_select(
             array(
                 tbl3::PRODUCT_ID,
-                $db->as_name($db->sum( tbl3::QUANTITY),"quantity"),
-                $db->as_name($db->sum( tbl3::QTY),"qty"),
-                $db->as_name($db->sum( tbl3::PRICE),"price"),
+                $mainDB->as_name($mainDB->sum(tbl3::QUANTITY), "quantity"),
+                $mainDB->as_name($mainDB->sum(tbl3::QTY), "qty"),
+                $mainDB->as_name($mainDB->sum(tbl3::PRICE), "price"),
             ),
             tbl3::TABLE_NAME,
-            $db->join->inner([
+            $mainDB->join->inner([
                 tbl7::TABLE_NAME => [tbl7::ID => tbl3::ORDER_ID]
             ]),
-            where: $db->where->equals([
+            where: $mainDB->where->equals([
                 tbl3::BRANCH_ID => $sessions->get->BRANCH_ID,
                 tbl3::STATUS    => order_products_status_types::CANCEL,
                 tbl7::SAFE_ID   => user::post(post_keys::SAFE_ID)
@@ -206,34 +218,62 @@ class z_report {
             order_by: tbl3::PRODUCT_ID
         )->rows;
 
-        foreach ($data as $data_){
-            if(array_list::index_of($id, $data_["product_id"]) < 0) array_push($id, $data_["product_id"]);
+        $id = array();
+        foreach ($data as $data_) {
+            if (array_list::index_of($id, $data_["product_id"]) < 0) array_push($id, $data_["product_id"]);
         }
 
-        $data_options = $db_->db_select(
-            array(
-                tbl3::PRODUCT_ID,
-                tbl4::OPTION_ITEM_ID,
-                $db->as_name($db->sum(tbl4::QTY),"qty"),
-                $db->as_name($db->sum(tbl4::PRICE),"price"),
-            ),
-            tbl4::TABLE_NAME,
-            $db->join->inner([
-                tbl3::TABLE_NAME => [tbl3::ID => tbl4::ORDER_PRODUCT_ID],
-                tbl7::TABLE_NAME => [tbl7::ID => tbl3::ORDER_ID]
-            ]),
-            $db->where->equals([
-                tbl4::BRANCH_ID => $sessions->get->BRANCH_ID,
-                tbl3::STATUS => order_products_status_types::CANCEL,
-                tbl3::PRODUCT_ID => $id,
-                tbl7::SAFE_ID   => user::post(post_keys::SAFE_ID)
-            ]),
-            tbl3::PRODUCT_ID.",".tbl4::OPTION_ITEM_ID,
-            tbl4::OPTION_ITEM_ID
-        )->rows;
+        if (count($data) > 0) {
+            $data_options = $db->db_select(
+                array(
+                    tbl3::PRODUCT_ID,
+                    tbl4::OPTION_ITEM_ID,
+                    $mainDB->as_name($mainDB->sum(tbl4::QTY), "qty"),
+                    $mainDB->as_name($mainDB->sum(tbl4::PRICE), "price"),
+                ),
+                tbl4::TABLE_NAME,
+                $mainDB->join->inner([
+                    tbl3::TABLE_NAME => [tbl3::ID => tbl4::ORDER_PRODUCT_ID],
+                    tbl7::TABLE_NAME => [tbl7::ID => tbl3::ORDER_ID]
+                ]),
+                $mainDB->where->equals([
+                    tbl4::BRANCH_ID => $sessions->get->BRANCH_ID,
+                    tbl3::STATUS => order_products_status_types::CANCEL,
+                    tbl3::PRODUCT_ID => $id,
+                    tbl7::SAFE_ID   => user::post(post_keys::SAFE_ID)
+                ]),
+                tbl3::PRODUCT_ID . "," . tbl4::OPTION_ITEM_ID,
+                tbl4::OPTION_ITEM_ID
+            )->rows;
 
-        foreach ($data_options as $data_){
-            if(array_list::index_of($id_options, $data_["option_item_id"]) < 0) array_push($id_options, $data_["option_item_id"]);
+            $id_options = array();
+            foreach ($data_options as $data_) {
+                if (array_list::index_of($id_options, $data_["option_item_id"]) < 0) array_push($id_options, $data_["option_item_id"]);
+            }
+
+            $names = $mainDB->db_select(
+                array(
+                    tbl5::ID,
+                    tbl5::QUANTITY_ID,
+                    tbl5::CODE,
+                    $mainDB->as_name(tbl5::NAME . $sessions->get->LANGUAGE_TAG, "name")
+                ),
+                tbl5::TABLE_NAME,
+                where: $mainDB->where->equals([
+                    tbl5::ID => $id
+                ])
+            )->rows;
+
+            $name_options = $mainDB->db_select(
+                array(
+                    tbl6::ID,
+                    $mainDB->as_name(tbl6::NAME . $sessions->get->LANGUAGE_TAG, "name")
+                ),
+                tbl6::TABLE_NAME,
+                where: $mainDB->where->equals([
+                    tbl6::ID => $id_options
+                ])
+            )->rows;
         }
 
         return array(
@@ -241,39 +281,21 @@ class z_report {
 
             "data_options" => $data_options,
 
-            "names" => $db->db_select(
-                array(
-                    tbl5::ID,
-                    tbl5::QUANTITY_ID,
-                    tbl5::CODE,
-                    $db->as_name(tbl5::NAME.$sessions->get->LANGUAGE_TAG, "name")
-                ),
-                tbl5::TABLE_NAME,
-                where: $db->where->equals([
-                tbl5::ID => $id
-            ])
-            )->rows,
+            "names" => $names,
 
-            "name_options" => $db->db_select(
-                array(
-                    tbl6::ID,
-                    $db->as_name(tbl6::NAME.$sessions->get->LANGUAGE_TAG, "name")
-                ),
-                tbl6::TABLE_NAME,
-                where: $db->where->equals([
-                tbl6::ID => $id_options
-            ])
-            )->rows
+            "name_options" => $name_options
         );
     }
 
-    private function get_costs(db $db, db $db_, sessions $sessions) : array{
+    private function get_costs(db $mainDB, db $db, sessions $sessions): array
+    {
         return array(
-            "data" => $db_->db_select(
+            "data" => $db->db_select(
                 array(
-                    $db->as_name($db->sum(tbl::PRICE),"price")
-                ),tbl::TABLE_NAME,
-                where: $db->where->equals([
+                    $mainDB->as_name($mainDB->sum(tbl::PRICE), "price")
+                ),
+                tbl::TABLE_NAME,
+                where: $mainDB->where->equals([
                     tbl::BRANCH_ID => $sessions->get->BRANCH_ID,
                     tbl::SAFE_ID   => user::post(post_keys::SAFE_ID),
                     tbl::STATUS    => order_payment_status_types::COST,

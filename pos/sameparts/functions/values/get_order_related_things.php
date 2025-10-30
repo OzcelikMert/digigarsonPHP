@@ -41,7 +41,7 @@ if(
     $echo->return();
 }
 
-function set_echo_values(db $db, sessions $sessions, echo_values &$echo) : void{
+function set_echo_values(db $db, sessions $sessions, echo_values &$echo) : void {
     $type = variable::clear_method(post_keys::GET_TYPE, clear_types::INT);
 
     $where = "";

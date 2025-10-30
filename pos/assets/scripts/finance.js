@@ -372,18 +372,11 @@ let finance = (function () {
                         case "print": invoice.payyed_payment_receipt(order_id); break;
                         case "view":
                             invoice.return_html = true;
-                            $.ajax({
-                                    url: "../public/assets/printer/invoice.php",
-                                    type: "POST",
-                                    data: {elements: invoice.payyed_payment_receipt(order_id, true)},
-                                    async: false,
-                                    success: function (data) {
-                                        invoice.return_html = false;
-                                        $(`${self.class_list.INVOICE_SHOW_ELEMENTS} iframe`).attr("srcdoc", data);
-                                        $(self.id_list.MODAL_INVOICE_SHOW).modal("show");
-                                        $(self.class_list.INVOICE_PRINT_BTN_MODAL).attr("order-id", order_id);
-                                    }
-                            });
+                            let html = invoice.payyed_payment_receipt(order_id, true);
+                            $(`${self.class_list.INVOICE_SHOW_ELEMENTS} iframe`).attr("srcdoc", html);
+                            $(self.id_list.MODAL_INVOICE_SHOW).modal("show");
+                            $(self.class_list.INVOICE_PRINT_BTN_MODAL).attr("order-id", order_id);
+                            invoice.return_html = false;
                         break;
                     }
                 })
@@ -447,12 +440,14 @@ let finance = (function () {
                         }
                     }
 
+                    let total_price_color = (account.total < 0) ? "text-danger" : "text-success";
+
                     element += `
                         <tr account-id="${account.id}">
                             <td>${account.id}</td>
                             <td>${account.name}</td>
                             <td>${account.discount}</td>
-                            <td>${account.total.toFixed(2) + main.data_list.CURRENCY}</td>
+                            <td><b class="${total_price_color}">${account.total.toFixed(2)}</b>${main.data_list.CURRENCY}</td>
                             <td class="text-center">
                                 <button function="info" class="e_trust_account_btn btn btn-primary"><i class="fa fa-eye"></i></button>
                             </td>
@@ -567,16 +562,20 @@ let finance = (function () {
                 console.log(data_payments);
                 let total_price = 0;
                 data_payments.forEach(account_payment => {
+                    let payment_type = array_list.find(main.data_list.PAYMENT_TYPES, account_payment.type, "id");
+                    let isPayment = account_payment.order_id == 0;
                     let price = parseFloat(account_payment.price);
-                    price = ((account_payment.order_id > 0) ? -1 : 1) * price;
+                    price = (!isPayment ? -1 : 1) * price;
                     total_price += price;
+                    let price_color = (price < 0) ? "text-danger" : "text-success";
+                    let total_price_color = (total_price < 0) ? "text-danger" : "text-success";
                     element += `
                         <tr trust-payment-id="${account_payment.id}" payment-id="${account_payment.payment_id}" safe-id="${account_payment.safe_id}">
-                            <td>${account_payment.comment}</td>
+                            <td>${isPayment ? `(${payment_type.name})` : ""} ${account_payment.comment}</td>
                             <td>${account_payment.date}</td>
-                            <td>${account_payment.discount}</td>
-                            <td>${price.toFixed(2) + main.data_list.CURRENCY}</td>
-                            <td>${total_price.toFixed(2) + main.data_list.CURRENCY}</td>
+                            <td>${!isPayment ? account_payment.discount : ""}</td>
+                            <td><b class="${price_color}">${price.toFixed(2)}</b>${main.data_list.CURRENCY}</td>
+                            <td><b class="${total_price_color}">${total_price.toFixed(2)}</b>${main.data_list.CURRENCY}</td>
                         </tr>
                     `;
                 });
@@ -744,9 +743,12 @@ let finance = (function () {
                             helper_sweet_alert.success(language.data.PROCESS_SUCCESS_TITLE, language.data.PAID_SUCCESS_TEXT);
                             main.get_payments_related_things(main.get_type_for_payments_related_things.PAYMENTS);
                             main.get_trust_accounts_related_things(main.get_type_for_branch_trust_accounts_related_things.PAYMENTS);
+                            self.variable_list.ACCOUNTS = [];
                             self.get();
                             self.get_account_payments();
                             safe.get();
+                            $(self.id_list.FORM_PAYMENT).trigger("reset");
+                            $(self.id_list.MODAL_PAYMENT).modal("hide");
                         }, timeout: settings.ajax_timeouts.NORMAL
                     });
                 });
