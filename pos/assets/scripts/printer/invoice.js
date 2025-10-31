@@ -56,20 +56,55 @@ let invoice = (function () {
     return true;
   }
   function get_safe_data(data = Array()) {
-    data.products.forEach(function (product) {
+    let print_data = {
+      orders_id: Array(),
+      products: Array(),
+      orders: Array(),
+      table: "",
+      user_name: "",
+      is_qr_order: false,
+      payments: Array(),
+      ...data
+    };
+    
+    print_data.products = data.products.map(function (product) {
       let p = array_list.find(main.data_list.PRODUCTS, parseInt(product.id), "id");
       product.quantity_id = p.quantity_id;
       product.name = p.name;
-      product.options.forEach(function (option) {
+      product.options.map(function (option) {
         option.name = array_list.find(
           main.data_list.PRODUCT_OPTIONS_ITEMS,
           parseInt(option.option_item_id),
           "id"
         ).name;
+        return option;
       });
+      return product;
     });
-    data.table = "Kasa Satış";
-    return data;
+
+    print_data.table = "Kasa Satış";
+
+    print_data.user_name =
+      typeof app == "undefined" || app.printer.settings.showUserName
+        ? invoice.user_name !== null
+          ? invoice.user_name
+          : print_data.products[print_data.products.length - 1].account_name
+        : "";
+
+    const payments = array_list.find_multi(main.data_list.PAYMENTS, data.order_id, "order_id");
+
+    payments.forEach(payment => {
+      if ([2, 3].includes(payment.status) || payment.type_id == 9) return;
+      let index = array_list.index_of(print_data.payments, payment.type, "type");
+      if(index > -1) {
+        print_data.payments[index].price += parseFloat(payment.price);
+        return;
+      }else {
+        print_data.payments.push(payment);
+      }
+    });
+    
+    return print_data;
   }
   invoice.setPrint = function (value, printer = "") {
     console.log("invoice.setPrint", value, printer);

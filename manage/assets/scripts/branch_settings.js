@@ -299,6 +299,7 @@ let branch_settings = (function () {
                 );
             })
             main.data_list.PAYMENT_TYPES.forEach(function (item){
+                if([6, 9].includes(item.id)){ return; }
                 if (!self.variable_list.PAYMENT.BRANCH.includes(item.id)){
                     deactivate += helper.create_table_columns({attr: {"type-id": item.id}}, [self.buttons.ADD, `${item.name}`]);
                 }
@@ -350,7 +351,9 @@ let branch_settings = (function () {
                     //console.log(self.variable_list.TAKEAWAY)
                 });
                 $(document).on("submit",`${self.id_list.MODAL}`,function (){
-                    set(set_types.PAYMENT_METHOD, {payment: self.variable_list.PAYMENT, takeaway: self.variable_list.TAKEAWAY})
+                    set(set_types.PAYMENT_METHOD, {payment: self.variable_list.PAYMENT, takeaway: self.variable_list.TAKEAWAY}, function (data) {
+                        console.log(data);
+                    })
                     return false;
                 });
             }

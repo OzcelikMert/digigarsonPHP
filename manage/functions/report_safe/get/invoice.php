@@ -36,16 +36,10 @@ class invoice {
                 tbl3::PRICE,
                 tbl3::DATE,
                 tbl3::TYPE,
-                $db->as_name(tbl::ID, "order_id"),
-                $db->as_name(tbl::NO, "order_no"),
-                tbl::TABLE_ID,
                 tbl3::ACCOUNT_ID,
                 tbl3::ACCOUNT_TYPE
             ),
             tbl3::TABLE_NAME,
-            $db->join->left(array(
-                tbl::TABLE_NAME  => [tbl::ID => tbl3::ORDER_ID],
-            )),
             where: $db->where->equals([
                 tbl3::BRANCH_ID => $sessions->get->BRANCH_ID,
                 tbl3::SAFE_ID   => user::post(post_keys::SAFE_ID),

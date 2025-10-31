@@ -406,7 +406,6 @@ let orders = (function () {
                     : 0,
                 },
                 function (data) {
-                  data = JSON.parse(data);
                   if (data.status) {
                     $(navbar.class_list.BACK_MOVE_TABLE).trigger("click");
                     main.get_order_related_things(
@@ -565,6 +564,7 @@ let orders = (function () {
       SELECTED_TABLE_ID: 0,
       SELECTED_ORDER_TYPE: 0,
       SELECTED_ORDER_ID: 0,
+      SELECTED_ORDER_NO: 0,
       SELECTED_PRODUCT_ID: 0,
       SELECTED_TRUST_ACCOUNT_ID: 0,
       SELECTED_PAYMENT_MODE: 0,
@@ -706,7 +706,6 @@ let orders = (function () {
         orders.forEach((order) => {
           if (order.confirmed_account_id == 0)
             set(set_types.UPDATE_CONFIRM_ACCOUNT_ID, { order_id: order.id }, function (data) {
-              data = JSON.parse(data);
               order.confirmed_account_id = data.rows.user_id;
             });
           let order_products = array_list.find_multi(
@@ -985,7 +984,7 @@ let orders = (function () {
           orders: [
             {
               table_id: self.variable_list.SELECTED_TABLE_ID,
-              no: "",
+              no: self.variable_list.SELECTED_ORDER_NO > 0 ? self.variable_list.SELECTED_ORDER_NO : 0,
             },
           ],
           discount: 0,
@@ -1301,7 +1300,6 @@ let orders = (function () {
               order_id: self.variable_list.SELECTED_ORDER_ID,
             },
             function (data) {
-              data = JSON.parse(data);
               if (data.status) {
                 main.get_order_related_things(
                   main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
@@ -1784,7 +1782,6 @@ let orders = (function () {
                   set_types.INSERT,
                   self.get_order_product_data(self.order_product_get_types.UNCONFIRMED),
                   function (data) {
-                    data = JSON.parse(data);
                     if (data.status) {
                       main.get_order_related_things(
                         main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
@@ -2363,7 +2360,6 @@ let orders = (function () {
             $(modal_id).modal("toggle");
           } else {
             set(set_type, get_data(), function (data) {
-              data = JSON.parse(data);
               main.get_order_related_things(
                 main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
               );
@@ -2495,7 +2491,12 @@ let orders = (function () {
 
             switch (self.variable_list.SELECTED_PAYMENT_MODE) {
               case self.payment_modes.FAST:
-                set(set_types.PAYMENT, data, function () {
+                set(set_types.PAYMENT, data, function (result) {
+                  console.log("payment result", result);
+                  if(self.variable_list.SELECTED_ORDER_TYPE == helper.db.order_types.SAFE){
+                    self.variable_list.SELECTED_ORDER_ID = result.custom_data.POST.order_id;
+                    self.variable_list.SELECTED_ORDER_NO = result.custom_data.POST.no;
+                  }
                   main.get_payments_related_things(
                     main.get_type_for_payments_related_things.PAYMENTS
                   );
@@ -2517,6 +2518,7 @@ let orders = (function () {
                   if ($(self.class_list.PRODUCT_ORDER_CONFIRMED).length < 1)
                     self.back_detail(self.back_detail_types.TABLE);
                   $(self.id_list.MODAL_PAYMENT_TYPES).modal("toggle");
+                  self.variable_list.SELECTED_ORDER_NO = 0;
                 });
                 break;
               case self.payment_modes.NORMAL:
@@ -2548,7 +2550,6 @@ let orders = (function () {
                     );
 
                     set(set_types.PAYMENT, data, function (data) {
-                      data = JSON.parse(data);
                       main.get_payments_related_things(
                         main.get_type_for_payments_related_things.PAYMENTS
                       );
@@ -2717,7 +2718,6 @@ let orders = (function () {
           }
 
           set(set_types.INSERT, get_data(), function (data) {
-            data = JSON.parse(data);
             if (data.status) {
               main.get_order_related_things(
                 main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
@@ -3065,7 +3065,6 @@ let orders = (function () {
                       helper.log(data_insert, "data_insert");
 
                       set(set_types.INSERT, data_insert, function (data) {
-                        data = JSON.parse(data);
                         console.log(data);
                         main.get_order_related_things(
                           main.get_type_for_order_related_things.ORDER_AND_ORDER_PRODUCTS
@@ -3552,6 +3551,7 @@ let orders = (function () {
       type: "POST",
       data: data,
       success: function (data) {
+        data = JSON.parse(data);
         console.log(data);
         success_function(data);
       },

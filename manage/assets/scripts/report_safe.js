@@ -536,11 +536,12 @@ let report_safe = (function () {
 
                 self.variable_list.DATA[self.data_types.PAYMENTS].forEach(payment => {
                     if(payment.type === 0 || payment.order_id === 0) return;
+                    const order = array_list.find(main.data_list.ORDERS, payment.order_id, "id");
                     if(typeof data[payment.order_id] === "undefined")
                         data[payment.order_id] = {
                             "id": payment.order_id,
-                            "no": payment.order_no,
-                            "table_id": payment.table_id,
+                            "no": order.no,
+                            "table_id": order.table_id,
                             "payments": Array()
                         };
                     if(typeof data[payment.order_id].payments[payment.type] === "undefined") {

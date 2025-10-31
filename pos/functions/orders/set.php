@@ -6,6 +6,7 @@ use config\database_list;
 use config\db;
 use config\sessions;
 use config\sessions\check;
+use config\settings\application_names;
 use matrix_library\php\operations\user;
 use matrix_library\php\operations\variable;
 use pos\functions\orders\set\cancel_and_catering;
@@ -42,7 +43,7 @@ class set_types {
 }
 /* end CONST Values */
 
-if(user::check_sent_data([post_keys::SET_TYPE]) && (check::check(false) || \waiter_terminal\sameparts\functions\sessions\check::check(false))) {
+if(user::check_sent_data([post_keys::SET_TYPE]) && (check::check(false) || check::check(false, application_names::MANAGE) || check::check(false, application_names::WAITER_TERMINAL))) {
     $db = new db(database_list::LIVE_MYSQL_1);
     $echo = new echo_values();
     $sessions = new sessions();
