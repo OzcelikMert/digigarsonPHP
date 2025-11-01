@@ -196,6 +196,8 @@ class send_order{
                         "quantity"      => 1,
                         "qty"           => (int)$value["product"]["amount"],
                         "comment"       => "",
+                        "category_id"   => (int)($product["category_id"] ?? 0),
+                        "is_print"      => 0
                     );
 
                     $total_price += $product["price"];

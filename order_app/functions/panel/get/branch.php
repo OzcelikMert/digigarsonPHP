@@ -70,7 +70,7 @@ class branch{
                             $echo->error_code = settings::error_codes()::IP_BLOCK;
                         }
 
-                        $table_type = ($table_type == branch_table_types::DIGITAL_MENU) ? branch_table_types::SAFE : $table_type;
+                        $table_type = ($table_type == branch_table_types::DIGITAL_MENU || $table_type == branch_table_types::TABLE_WITHOUT_SESSION) ? branch_table_types::TABLE : $table_type;
 
                         $echo->rows["PRODUCTS"] = products::get($db,$sessions->LANGUAGE_TAG,
                             $branch_id, is_mobile: true,

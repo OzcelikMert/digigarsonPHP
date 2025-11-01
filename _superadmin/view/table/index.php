@@ -21,11 +21,15 @@
 
 
                 <div class="form-group">
-                    <input type="number" class="form-control "  id="table_start" name="table_start" placeholder="Masa Başlangıç"/>
+                    <input type="number" class="form-control " id="table_start" name="table_start" placeholder="Masa Başlangıç" />
                 </div>
                 <div class="form-group">
-
-                    <input type="number" class="form-control " id="table_end" name="table_end" placeholder="Masa Bitiş"/>
+                    <input type="number" class="form-control " id="table_end" name="table_end" placeholder="Masa Bitiş" />
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="without_session"> Oturumsuz Sipariş (Mobilden Gelen Müşteriler İçin)
+                    </label>
                 </div>
                 <div class="form-group text-right mr-4">
 
@@ -43,7 +47,7 @@
                     <select id="search_branch_id" class="form-control branch_list"></select>
                 </div>
                 <div class="form-group text-right mr-4">
-                    <button class="btn btn-warning mt-2"  function="getBranchTable" type="submit">Masa Ara <i class="fa fa-search"></i></button>
+                    <button class="btn btn-warning mt-2" function="getBranchTable" type="submit">Masa Ara <i class="fa fa-search"></i></button>
                 </div>
             </div>
             <div class="col-lg-12">
@@ -58,6 +62,5 @@
             </div>
         </div>
 
+    </div>
 </div>
-</div>
-

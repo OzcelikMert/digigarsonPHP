@@ -100,7 +100,7 @@ class register{
             $echo->custom_data["update_user"] = $this->update_user($db, $echo);
             $echo->error_code = settings::error_codes()::REGISTERED_VALUE;
 
-            new net_gsm("Güvenlik Kodu: " . user::post(post_keys::RANDOM), user::post(post_keys::PHONE));
+            //new net_gsm("Güvenlik Kodu: " . user::post(post_keys::RANDOM), user::post(post_keys::PHONE));
             $session->NAME  = $result->rows[0][user_keys::NAME];
             $session->PHONE = $result->rows[0][user_keys::PHONE];
             $session->USER_ID = $result->rows[0][user_keys::ID];
@@ -110,7 +110,7 @@ class register{
             $echo->custom_data["insert_user"] = $result;
             $echo->status = $result->status;
             if ($result->status && $result->insert_id > 0) {
-                new net_gsm("Güvenlik Kodu: " . user::post(post_keys::RANDOM), user::post(post_keys::PHONE));
+                //new net_gsm("Güvenlik Kodu: " . user::post(post_keys::RANDOM), user::post(post_keys::PHONE));
                 $session->NAME  = user::post(post_keys::NAME);
                 $session->PHONE = user::post(post_keys::PHONE);
                 $session->USER_ID = $result->insert_id;

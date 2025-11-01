@@ -86,16 +86,8 @@ let helper = (function () {
             DIGITAL_MENU: 5,
             YEMEK_SEPETI: 6,
             OTHER_SALE: 7,
-            PERSON_SALE: 8
-        },
-        branch_tables_static: {
-            SAFE: 1,
-            TABLE: 1,
-            TAKE_AWAY: 2,
-            COME_TAKE: 3,
-            DIGITAL_MENU: 4,
-            OTHER_SALE: 7,
-            PERSON_SALE: 8
+            PERSON_SALE: 8,
+            TABLE_WITHOUT_SESSION: 9
         },
         account_types: {
             CUSTOMER: 1,
